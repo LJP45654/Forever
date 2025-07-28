@@ -13,3 +13,5 @@ Internal team members: A tool is needed to demonstrate and verify the core funct
 
 
 #Product objectives
+
+Provide core portfolio management functions: allow users to modify, save,  add and remove financial assets in the portfolio.
