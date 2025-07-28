@@ -10,3 +10,6 @@ Individual investors: individuals who want to effectively manage and monitor the
 Financial learners/trainees: Learning and practicing in the financial field requires a practical platform to apply the knowledge learned.
 
 Internal team members: A tool is needed to demonstrate and verify the core functions of portfolio management.
+
+
+#Product objectives
