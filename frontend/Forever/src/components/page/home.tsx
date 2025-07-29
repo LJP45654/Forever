@@ -1,25 +1,16 @@
-import { Pie, PieChart } from "recharts";
+import { Cell, Legend, Pie, PieChart } from "recharts";
 import { ChartContainer, type ChartConfig } from "../ui/chart";
+import DataCard from "../dataCard";
 
-const data01 = [
+const data = [
   { name: 'Group A', value: 400 },
   { name: 'Group B', value: 300 },
   { name: 'Group C', value: 300 },
   { name: 'Group D', value: 200 },
+  { name: 'Group D', value: 200 },
+  { name: 'Group D', value: 200 },
 ];
-const data02 = [
-  { name: 'A1', value: 100 },
-  { name: 'A2', value: 300 },
-  { name: 'B1', value: 100 },
-  { name: 'B2', value: 80 },
-  { name: 'B3', value: 40 },
-  { name: 'B4', value: 30 },
-  { name: 'B5', value: 50 },
-  { name: 'C1', value: 100 },
-  { name: 'C2', value: 200 },
-  { name: 'D1', value: 150 },
-  { name: 'D2', value: 50 },
-];
+const COLORS = ['#ffa2a2', '#ffb86a', '#ffd230', '#ffdf20'];
 const chartConfig = {
   desktop: {
     label: "Desktop",
@@ -33,12 +24,31 @@ const chartConfig = {
 
 function Home() {
   return (
-    <ChartContainer config={chartConfig} className="min-h-[200px] w-full">
-      <PieChart width={400} height={400}>
-        <Pie data={data01} dataKey='value' cx='50%' outerRadius={60} fill='#8884d8' />
-        <Pie data={data02} dataKey='value' cx='50%' innerRadius={70} outerRadius={90} fill='#82ca9d' label />
-      </PieChart>
-    </ChartContainer>
+    <DataCard title='Current Asset'>
+      <ChartContainer config={chartConfig} className="min-h-[200px] w-full">
+        <PieChart>
+          <Pie
+            data={data}
+            innerRadius={60}
+            outerRadius={80}
+            fill="#8884d8"
+            paddingAngle={5}
+            dataKey="value"
+          >
+            {data.map((entry, index) => (
+              <Cell key={`cell-${entry.name}`} fill={COLORS[index % COLORS.length]} />
+            ))}
+          </Pie>
+          <Legend
+            layout="vertical"
+            align="right"
+            verticalAlign="middle"
+            iconType="square"
+            wrapperStyle={{ paddingLeft: '20px', lineHeight: '24px' }}
+          />
+        </PieChart>
+      </ChartContainer>
+    </DataCard>
   );
 }
 

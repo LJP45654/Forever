@@ -1,6 +1,6 @@
 import { Separator } from './ui/separator';
 import { SidebarTrigger } from './ui/sidebar';
-import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbSeparator } from './ui/breadcrumb'
+import { Breadcrumb, BreadcrumbItem, BreadcrumbList, BreadcrumbSeparator } from './ui/breadcrumb'
 import { NavLink, useLocation } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 
