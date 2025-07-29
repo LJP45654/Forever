@@ -1,6 +1,6 @@
-import { query } from '../utils/db.js';
+const {query} = require('../utils/db.js');
 
-export async function getTickerNames(req, res) {
+async function getTickerNames(req, res) {
   try {
     const tickerNames = await query('SELECT DISTINCT ticker FROM stock');
     res.json(tickerNames);
@@ -9,3 +9,5 @@ export async function getTickerNames(req, res) {
     res.status(500).json({ error: 'Database query failed' });
   }
 }
+
+module.exports = { getTickerNames };

@@ -1,7 +1,7 @@
-import { query } from '../utils/db.js';
+const { query } = require('../utils/db.js');
 
 // 获取所有现金记录
-export async function getAllCashRecords(req, res) {
+async function getAllCashRecords(req, res) {
   try {
     const cashRecords = await query('SELECT * FROM cash');
     res.json(cashRecords);
@@ -11,7 +11,7 @@ export async function getAllCashRecords(req, res) {
   }
 }
 
-export async function getCashCurrency(req, res) {
+async function getCashCurrency(req, res) {
   try {
     const currency = await query('SELECT DISTINCT currency FROM cash');
     res.json(currency);
@@ -19,4 +19,9 @@ export async function getCashCurrency(req, res) {
     console.error('Error fetching cash currency:', error);
     res.status(500).json({ error: 'Database query failed' });
   }
+}
+
+module.exports = {
+  getAllCashRecords,
+  getCashCurrency,
 }
