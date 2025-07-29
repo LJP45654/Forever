@@ -1,6 +1,6 @@
-import { Router } from 'express';
-import { getAllCashRecords, getCashCurrency} from '../controllers/cashController.js';
-import { getTickerNames } from '../controllers/stockController.js';
+const Router  = require('express');
+const {getAllCashRecords, getCashCurrency} = require('../controllers/cashController.js');
+const {getTickerNames} = require('../controllers/stockController.js');
 
 const router = Router();
 
@@ -11,4 +11,5 @@ router.get('/cash/currency', getCashCurrency);
 // 股票路由
 router.get('/stock/name', getTickerNames);
 
-export default router;
+// export default router;
+module.exports = router;
