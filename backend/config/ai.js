@@ -10,4 +10,4 @@ const client = axios.create({
     }
 });
 
-module.exports = {client}
+module.exports = { client }

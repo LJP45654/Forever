@@ -13,7 +13,7 @@ async function getAllCashRecords(req, res) {
 
 async function getCashCurrency(req, res) {
   try {
-    sql=`SELECT c.currency,SUM(c.amount) as total_amount,SUM(c.amount * er.rate_to_cny) as total_amount_cny
+    sql = `SELECT c.currency,SUM(c.amount) as total_amount,SUM(c.amount * er.rate_to_cny) as total_amount_cny
         FROM cash c
         JOIN exchange_rates er ON c.currency = er.currency_code
         GROUP BY c.currency

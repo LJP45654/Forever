@@ -1,7 +1,7 @@
-const Router  = require('express');
-const {getAllCashRecords, getCashCurrency} = require('../controllers/cashController.js');
-const {getTickerNames} = require('../controllers/stockController.js');
-const {chatBot} = require('../controllers/aiController.js');
+const Router = require('express');
+const { getAllCashRecords, getCashCurrency } = require('../controllers/cashController.js');
+const { getTickerNames } = require('../controllers/stockController.js');
+const { chatBot } = require('../controllers/aiController.js');
 
 const router = Router();
 

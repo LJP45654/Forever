@@ -57,4 +57,4 @@ async function chatBot(req, res) {
   }
 }
 
-module.exports = {chatBot};
+module.exports = { chatBot };

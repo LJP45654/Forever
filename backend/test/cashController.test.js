@@ -1,5 +1,5 @@
 const { query } = require('../utils/db.js');
-const { getAllCashRecords,getCashCurrency } = require('../controllers/cashController.js');
+const { getAllCashRecords, getCashCurrency } = require('../controllers/cashController.js');
 
 // 模拟数据库查询模块
 jest.mock('../utils/db.js', () => ({
@@ -13,7 +13,7 @@ describe('getAllCashRecords', () => {
   beforeEach(() => {
     // 重置所有 mock
     jest.clearAllMocks();
-    
+
     // 创建 mock 请求和响应对象
     mockReq = {};
     mockRes = {
@@ -28,7 +28,7 @@ describe('getAllCashRecords', () => {
       { id: 1, amount: 100, description: 'Test record 1' },
       { id: 2, amount: 200, description: 'Test record 2' }
     ];
-    
+
     // 设置 query mock 的返回值
     query.mockResolvedValue(mockCashRecords);
 
@@ -36,7 +36,7 @@ describe('getAllCashRecords', () => {
 
     // 验证数据库查询是否被调用
     expect(query).toHaveBeenCalledWith('SELECT * FROM cash');
-    
+
     // 验证响应
     expect(mockRes.json).toHaveBeenCalledWith(mockCashRecords);
     expect(mockRes.status).not.toHaveBeenCalled();
@@ -48,7 +48,7 @@ describe('getAllCashRecords', () => {
     query.mockRejectedValue(mockError);
 
     // 模拟 console.error
-    const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+    const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => { });
 
     await getAllCashRecords(mockReq, mockRes);
 
@@ -98,6 +98,7 @@ describe('getCashCurrency', () => {
     // 验证数据库查询是否被调用
     expect(query).toHaveBeenCalledWith('SELECT DISTINCT currency FROM cash');
     expect(mockRes.json).toHaveBeenCalledWith(mockCashCurrency);
-    expect(mockRes.status).not.toHaveBeenCalled();  
-});})
+    expect(mockRes.status).not.toHaveBeenCalled();
+  });
+})
 
