@@ -1,15 +1,19 @@
 const Router = require('express');
-const { getAllCashRecords, getCashCurrency } = require('../controllers/cashController.js');
+const { getAllCashRecords, getBalanceSnapshot,updateBalanceSnapshot,insertCashRecords,deleteCashRecords } = require('../controllers/cashController.js');
 const { getTickerNames } = require('../controllers/stockController.js');
 const { chatBot } = require('../controllers/aiController.js');
 
 const router = Router();
 
-// 现金记录路由
+// Cash routes
 router.get('/cash', getAllCashRecords);
-router.get('/cash/currency', getCashCurrency);
+router.get('/cash/currency', getBalanceSnapshot);
 
-// 股票路由
+router.post('/cash/balance/snapshot', updateBalanceSnapshot);//测试用，前端不拿
+router.post('/cash/insert',insertCashRecords)
+router.delete('/cash/delete',deleteCashRecords)
+
+// ticker routes
 router.get('/stock/name', getTickerNames);
 
 

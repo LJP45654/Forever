@@ -74,31 +74,3 @@ describe('getAllCashRecords', () => {
     expect(mockRes.json).toHaveBeenCalledWith([]);
   });
 });
-
-describe('getCashCurrency', () => {
-  it('should return the cash currency', async () => {
-    const mockReq = {};
-    const mockRes = {
-      json: jest.fn(),
-      status: jest.fn().mockReturnThis()
-    };
-
-    const mockCurrency = 'USD';
-
-    // 模拟数据库返回的数据
-    const mockCashCurrency = [
-      { currency: mockCurrency }
-    ];
-
-    // 设置 query mock 的返回值
-    query.mockResolvedValue(mockCashCurrency);
-
-    await getCashCurrency(mockReq, mockRes);
-
-    // 验证数据库查询是否被调用
-    expect(query).toHaveBeenCalledWith('SELECT DISTINCT currency FROM cash');
-    expect(mockRes.json).toHaveBeenCalledWith(mockCashCurrency);
-    expect(mockRes.status).not.toHaveBeenCalled();
-  });
-})
-

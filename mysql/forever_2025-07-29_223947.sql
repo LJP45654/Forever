@@ -1,8 +1,8 @@
--- MySQL dump 10.13  Distrib 8.0.42, for Win64 (x86_64)
+-- MySQL dump 10.13  Distrib 8.0.43, for Win64 (x86_64)
 --
 -- Host: 127.0.0.1    Database: forever
 -- ------------------------------------------------------
--- Server version	8.0.42
+-- Server version	8.0.43
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -26,10 +26,10 @@ CREATE TABLE `cash` (
   `id` int NOT NULL AUTO_INCREMENT,
   `timestamp` datetime NOT NULL,
   `currency` varchar(10) NOT NULL,
-  `amount` double NOT NULL,
+  `delta_amount` decimal(12,2) NOT NULL,
   `note` text,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=51 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -37,8 +37,33 @@ CREATE TABLE `cash` (
 --
 
 /*!40000 ALTER TABLE `cash` DISABLE KEYS */;
-INSERT INTO `cash` VALUES (21,'2025-03-01 10:00:00','CNY',1000,'初始余额'),(22,'2025-03-05 12:00:00','CNY',1200,'工资 +200'),(23,'2025-03-10 09:30:00','CNY',1100,'支出 -100'),(24,'2025-03-15 15:00:00','CNY',1250,'转账收入 +150'),(25,'2025-03-20 14:00:00','CNY',1170,'购物 -80'),(26,'2025-03-25 18:00:00','CNY',1700,'奖金 +530'),(27,'2025-03-30 20:00:00','CNY',1650,'请客吃饭 -50'),(28,'2025-04-01 09:00:00','USD',300,'初始余额'),(29,'2025-04-05 13:00:00','USD',450,'收入 +150'),(30,'2025-04-10 17:00:00','USD',420,'订阅支出 -30'),(31,'2025-04-15 11:30:00','USD',620,'项目款 +200'),(32,'2025-04-20 16:30:00','USD',590,'餐费 -30'),(33,'2025-04-25 08:00:00','JPY',100000,'初始余额'),(34,'2025-04-28 14:00:00','JPY',98000,'车票 -2000'),(35,'2025-05-01 10:00:00','JPY',102000,'退款 +4000'),(36,'2025-05-05 13:00:00','JPY',101000,'咖啡 -1000'),(37,'2025-05-10 18:00:00','JPY',106000,'项目款 +5000'),(38,'2025-05-15 09:30:00','JPY',105000,'便利店 -1000'),(39,'2025-05-20 12:00:00','CNY',1800,'工资 +150'),(40,'2025-05-25 17:00:00','CNY',1700,'房租 -100'),(41,'2025-05-30 09:00:00','CNY',2100,'自由职业 +400'),(42,'2025-06-05 13:30:00','CNY',2050,'出差 -50'),(43,'2025-06-10 08:30:00','USD',650,'奖励 +60'),(44,'2025-06-15 14:00:00','USD',620,'平台扣费 -30'),(45,'2025-06-20 15:00:00','USD',670,'项目入账 +50'),(46,'2025-06-25 16:00:00','JPY',108000,'补贴 +3000'),(47,'2025-06-30 10:00:00','JPY',107000,'便利店 -1000'),(48,'2025-07-05 19:00:00','JPY',110000,'稿费 +3000'),(49,'2025-07-10 09:30:00','CNY',2000,'周转支出 -100'),(50,'2025-07-15 15:00:00','CNY',2600,'大额入账 +600');
+INSERT INTO `cash` VALUES (1,'2025-07-26 14:30:00','CNY',1200.00,'工资收入'),(2,'2025-07-27 09:15:00','USD',-50.00,'Netflix订阅'),(3,'2025-07-28 11:45:00','JPY',10000.00,'换汇日元'),(4,'2025-07-30 16:20:00','EUR',-120.00,'购买电子书'),(5,'2025-08-01 13:00:00','CNY',-300.00,'超市购物'),(6,'2025-08-02 10:30:00','USD',500.00,'美元收入'),(7,'2025-08-03 15:10:00','JPY',-8000.00,'日元支出'),(8,'2025-08-05 09:55:00','CNY',600.00,'兼职工资'),(9,'2025-08-07 18:40:00','EUR',200.00,'欧元转入'),(10,'2025-08-08 14:00:00','CNY',-100.00,'水电费'),(11,'2025-08-10 17:25:00','USD',-75.00,'App订阅'),(12,'2025-08-12 20:10:00','CNY',-250.00,'外卖'),(13,'2025-08-13 08:30:00','JPY',5000.00,'日元退款'),(14,'2025-08-14 12:00:00','EUR',-10.00,'旅行预订'),(15,'2025-08-15 16:45:00','USD',100.00,'PayPal 收款'),(16,'2025-07-29 14:30:18','USD',100.50,'Initial deposit'),(20,'2025-07-29 14:32:25','USD',-50.00,'pay'),(21,'2025-07-29 14:32:25','EUR',200.00,NULL);
 /*!40000 ALTER TABLE `cash` ENABLE KEYS */;
+
+--
+-- Table structure for table `cash_snapshot`
+--
+
+DROP TABLE IF EXISTS `cash_snapshot`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `cash_snapshot` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `timestamp` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `currency` varchar(10) NOT NULL,
+  `balance` decimal(12,2) NOT NULL,
+  `note` text,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=37 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `cash_snapshot`
+--
+
+/*!40000 ALTER TABLE `cash_snapshot` DISABLE KEYS */;
+INSERT INTO `cash_snapshot` VALUES (33,'2025-07-29 22:38:40','CNY',1150.00,NULL),(34,'2025-07-29 22:38:40','USD',525.50,NULL),(35,'2025-07-29 22:38:40','JPY',7000.00,NULL),(36,'2025-07-29 22:38:40','EUR',270.00,NULL);
+/*!40000 ALTER TABLE `cash_snapshot` ENABLE KEYS */;
 
 --
 -- Table structure for table `deposit`
@@ -238,4 +263,4 @@ INSERT INTO `stocks` (`id`, `stock_name`, `currency`, `quantity`, `purchase_pric
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-07-29 15:45:53
+-- Dump completed on 2025-07-29 22:40:01
