@@ -1,47 +1,58 @@
 import type React from 'react';
-import { Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarMenuSub, SidebarMenuSubItem, SidebarProvider, SidebarRail } from './ui/sidebar';
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from './ui/collapsible';
-import { ChevronRight } from 'lucide-react';
+import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarRail } from './ui/sidebar';
+import NavMain from './navMain';
+import NavUser from './navUser';
 
-const items = [
+const categories = [
   {
     title: "Cash",
-    url: "",
+    url: "#",
     icon: "ri-cash-line",
+    items: ['CNY', 'JPY', 'USD']
   },
   {
     title: "Deposit",
     url: "#",
     icon: "ri-wallet-line",
+    items: []
   },
   {
     title: "Bonds",
     url: "#",
     icon: "ri-coupon-line",
+    items: []
   },
   {
     title: "Stock",
     url: "#",
     icon: "ri-stock-line",
+    items: []
   },
   {
     title: "Fund",
     url: "#",
     icon: "ri-funds-box-line",
+    items: []
   },
   {
     title: "Other",
     url: "#",
     icon: "ri-more-line",
+    items: []
   }
-]
+];
+const user = {
+  name: "shadcn",
+  email: "m@example.com",
+  avatar: "/avatars/shadcn.jpg",
+}
 function HomeSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar collapsible='icon' {...props}>
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton asChild className='data-[slot=sidebar-menu-button]:!p-1.5'>
+            <SidebarMenuButton asChild className='data-[slot=sidebar-menu-button]:!p-1.5' size='lg'>
               <a href='#'>
                 <i className='ri-tent-fill text-xl'></i>
                 <span className='text-base font-semibold'>Forever.</span>
@@ -50,34 +61,11 @@ function HomeSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarHeader>
-      <SidebarContent>
-        <SidebarGroup>
-          <SidebarMenu>
-            {items.map((item) => (
-              <Collapsible key={item.title} asChild className='group/collapsible'>
-                <SidebarMenuItem>
-                  <CollapsibleTrigger asChild>
-                    <SidebarMenuButton tooltip={item.title} className='flex gap-4'>
-                      <i className={`${item.icon}`} />
-                      <span className='font-mono'>{item.title}</span>
-                      <ChevronRight className='ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90' />
-                    </SidebarMenuButton>
-                  </CollapsibleTrigger>
-                  <CollapsibleContent>
-                    <SidebarMenuSub>
-                      <SidebarMenuSubItem>
-                        1
-                      </SidebarMenuSubItem>
-                    </SidebarMenuSub>
-                  </CollapsibleContent>
-                </SidebarMenuItem>
-              </Collapsible>
-            ))}
-          </SidebarMenu>
-        </SidebarGroup>
+      <SidebarContent className='font-mono'>
+        <NavMain categories={categories} />
       </SidebarContent>
-      <SidebarFooter>
-
+      <SidebarFooter className='font-mono'>
+        <NavUser user={user} />
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>
