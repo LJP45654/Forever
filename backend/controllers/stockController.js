@@ -2,7 +2,12 @@ const {query} = require('../utils/db.js');
 
 async function getTickerNames(req, res) {
   try {
-    const tickerNames = await query('SELECT DISTINCT ticker FROM stock');
+    sql=`SELECT s.currency,SUM(s.current_price*s.quantity) as total_amount,SUM(s.current_price * er.rate_to_cny*s.quantity) as total_amount_cny
+        FROM stocks s
+        JOIN exchange_rates er ON s.currency = er.currency_code
+        GROUP BY s.currency
+        ORDER BY s.currency;`
+    const tickerNames = await query(sql);
     res.json(tickerNames);
   } catch (error) {
     console.error('Error fetching ticker names:', error);

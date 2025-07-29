@@ -100,3 +100,4 @@ describe('getCashCurrency', () => {
     expect(mockRes.json).toHaveBeenCalledWith(mockCashCurrency);
     expect(mockRes.status).not.toHaveBeenCalled();  
 });})
+
