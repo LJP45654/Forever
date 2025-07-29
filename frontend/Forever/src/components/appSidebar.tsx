@@ -1,12 +1,13 @@
 import type React from 'react';
-import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarRail } from './ui/sidebar';
+import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from './ui/sidebar';
 import NavMain from './navMain';
 import NavUser from './navUser';
+import { NavLink } from 'react-router-dom';
 
 const categories = [
   {
     title: "Cash",
-    url: "#",
+    url: "Cash",
     icon: "ri-cash-line",
     items: ['CNY', 'JPY', 'USD']
   },
@@ -42,21 +43,21 @@ const categories = [
   }
 ];
 const user = {
-  name: "shadcn",
-  email: "m@example.com",
+  name: "Leon",
+  email: "Leon@example.com",
   avatar: "/avatars/shadcn.jpg",
 }
-function HomeSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar collapsible='icon' {...props}>
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton asChild className='data-[slot=sidebar-menu-button]:!p-1.5' size='lg'>
-              <a href='#'>
+              <NavLink to=''>
                 <i className='ri-tent-fill text-xl'></i>
                 <span className='text-base font-semibold'>Forever.</span>
-              </a>
+              </NavLink>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
@@ -67,9 +68,8 @@ function HomeSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       <SidebarFooter className='font-mono'>
         <NavUser user={user} />
       </SidebarFooter>
-      <SidebarRail />
     </Sidebar>
   );
 }
 
-export default HomeSidebar
+export default AppSidebar

@@ -1,6 +1,7 @@
 import { ChevronRight } from "lucide-react";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "./ui/collapsible";
 import { SidebarGroup, SidebarMenu, SidebarMenuItem, SidebarMenuButton, SidebarMenuSub, SidebarMenuSubItem, SidebarMenuSubButton } from "./ui/sidebar";
+import { NavLink } from "react-router-dom";
 
 function NavMain({
   categories,
@@ -29,9 +30,9 @@ function NavMain({
                 <CollapsibleTrigger asChild>
                   <SidebarMenuButton tooltip={category.title} className='flex gap-[8px]'>
                     <i className={`${category.icon} text-[16px]`} />
-                    <a href={category.url} className='grow'>
+                    <NavLink to={category.url} className='grow'>
                       <span className='text-[16px]'>{category.title}</span>
-                    </a>
+                    </NavLink>
                     <ChevronRight className='ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90' />
                   </SidebarMenuButton>
                 </CollapsibleTrigger>
@@ -40,9 +41,9 @@ function NavMain({
                     {category.items.map((item) => (
                       <SidebarMenuSubItem key={item}>
                         <SidebarMenuSubButton asChild>
-                          <a href={item}>
+                          <NavLink to={`${category.url}\\${item}`}>
                             <span>{item}</span>
-                          </a>
+                          </NavLink>
                         </SidebarMenuSubButton>
                       </SidebarMenuSubItem>
                     ))}

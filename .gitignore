@@ -1,1 +1,7 @@
+.kiro
+.vscode
+.gitignore
+backend
+mysql
+UIDesign
 frontend\Forever\node_modules

@@ -1,18 +1,29 @@
 import './App.css'
 import 'remixicon/fonts/remixicon.css'
-import HomeSidebar from './components/homeSidebar'
-import { SidebarInset, SidebarProvider, SidebarTrigger } from './components/ui/sidebar'
+import { SidebarInset, SidebarProvider } from './components/ui/sidebar'
+import { Route, Routes } from 'react-router-dom'
+
+import Home from './components/page/home'
+import AppSidebar from './components/appSidebar'
+import AppHeader from './components/appHeader'
 
 function App() {
   return (
     <>
       <SidebarProvider style={{
-        "--sidebar-width": "20rem",
-        "--sidebar-width-mobile": "20rem",
+        '--sidebar-width': '20rem',
+        '--sidebar-width-mobile': '20rem',
+        '--header-height': 'calc(var(--spacing) * 12)'
       } as React.CSSProperties}>
-        <HomeSidebar />
+        <AppSidebar variant='inset' />
         <SidebarInset>
-          <SidebarTrigger />
+          <div className='flex flex-1 flex-col'>
+            <AppHeader />
+            <Routes>
+              <Route path='/' element={<Home />} />
+              <Route path='Cash' element={<Home />} />
+            </Routes>
+          </div>
         </SidebarInset>
       </SidebarProvider>
     </>
