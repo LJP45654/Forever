@@ -1,4 +1,11 @@
 const { query } = require('../utils/db.js');
+const { getStockTimeSeries } = require('./stockController.js');
+const { getCashTimeSeries } = require('./cashController.js');
+const { getDepositTimeSeries } = require('./depositController.js');
+const { getFundTimeSeries } = require('./fundController.js');
+const { getBondTimeSeries } = require('./bondController.js');
+const { getOthersTimeSeries } = require('./othersController.js');
+
 
 async function getAssetSums() {
     const stock_sql = `SELECT ROUND(SUM(c.current_price*c.quantity* er.rate_to_cny),2) as ticker
@@ -14,7 +21,7 @@ async function getAssetSums() {
                        FROM funds f
                        JOIN exchange_rates er ON f.currency = er.currency_code;`;
     const bonds_sql = `SELECT ROUND(SUM(b.amount* er.rate_to_cny),2) as bonds
-                       FROM government_bonds b
+                       FROM bonds b
                        JOIN exchange_rates er ON b.currency = er.currency_code;`;
     const others_sql = `SELECT ROUND(SUM(o.current_amount* er.rate_to_cny),2) as others
                         FROM others o
@@ -45,7 +52,7 @@ async function getAssetDetails() {
     const cashCount_sql = `SELECT COUNT(*) as cash_count FROM cash_snapshot`;
     const depositCount_sql = `SELECT COUNT(DISTINCT currency) AS currency_count FROM deposit`;
     const fundsCount_sql = `SELECT COUNT(DISTINCT fund_name) as funds_count FROM funds`;
-    const bondsCount_sql = `SELECT COUNT(DISTINCT bond_name) as bonds_count FROM government_bonds`;
+    const bondsCount_sql = `SELECT COUNT(DISTINCT bond_name) as bonds_count FROM bonds`;
     const othersCount_sql = `SELECT COUNT(DISTINCT name) as others_count FROM others`;
 
     const tickerEarning_sql = `SELECT ROUND(SUM(purchase_price*c.quantity* er.rate_to_cny),2) as ticker_earning 
@@ -92,36 +99,37 @@ function formatResult(assets, details) {
     }
 
     return {
-        sum: totalSum.toFixed(2),
-        assets: {
-            ticker: {
-                amount: assets.ticker,
-                list_num: details.tickerNum,
-                total_earnings: details.tickerEarning,
-            },
-            cash: {
-                amount: assets.cash,
-                list_num: details.cashNum,
-            },
-            deposit: {
-                amount: assets.deposit,
-                list_num: details.depositNum,
-            },
-            funds: {
-                amount: assets.funds,
-                list_num: details.fundsNum,
-                total_earnings: details.fundsEarning,
-            },
-            bonds: {
-                amount: assets.bonds,
-                list_num: details.bondsNum,
-            },
-            othersSum: {
-                amount: assets.othersSum,
-                list_num: details.othersNum,
-                total_earnings: details.othersEarning,
-            }
+        stock: {
+            amount: assets.ticker,
+            list_num: details.tickerNum,
+            total_earnings: details.tickerEarning,
+        },
+        cash: {
+            amount: assets.cash,
+            list_num: details.cashNum,
+            total_earnings: 0,
+        },
+        deposit: {
+            amount: assets.deposit,
+            list_num: details.depositNum,
+            total_earnings: 0,
+        },
+        fund: {
+            amount: assets.funds,
+            list_num: details.fundsNum,
+            total_earnings: details.fundsEarning,
+        },
+        bond: {
+            amount: assets.bonds,
+            list_num: details.bondsNum,
+            total_earnings: 0,
+        },
+        others: {
+            amount: assets.othersSum,
+            list_num: details.othersNum,
+            total_earnings: details.othersEarning,
         }
+
     };
 }
 
@@ -173,8 +181,8 @@ async function getSearchData(req, res) {
             },
             {
                 name: 'bonds',
-                subCategoryQuery: `SELECT DISTINCT bond_name as value FROM government_bonds`,
-                searchQuery: `SELECT * FROM government_bonds WHERE bond_name LIKE ?`,
+                subCategoryQuery: `SELECT DISTINCT bond_name as value FROM bonds`,
+                searchQuery: `SELECT * FROM bonds WHERE bond_name LIKE ?`,
                 resultKey: 'bonds'
             },
             {
@@ -206,15 +214,15 @@ async function getSearchData(req, res) {
             // 获取子类别
             const subCategories = await query(category.subCategoryQuery);
             const subCategoryArray = subCategories.map(item => item.value);
-            
+
             // 检查是否有匹配
-            const hasMatch = subCategoryArray.some(item => 
+            const hasMatch = subCategoryArray.some(item =>
                 item.toLowerCase().includes(search.toLowerCase())
             );
-            
+
             // 将匹配状态添加到结果中
             result.searchResults.push(hasMatch);
-            
+
             // 如果有匹配，执行搜索查询
             if (hasMatch) {
                 const searchResults = await query(category.searchQuery, [searchParam]);
@@ -231,116 +239,169 @@ async function getSearchData(req, res) {
     }
 }
 
+// async function getTimeSeriesDataInCNY(req, res) {
+//     try {
+//         // 定义类别配置
+//         const categories = [
+//             {
+//                 name: 'stocks',
+//                 query: `SELECT s.purchase_date as date, 
+//                    s.quantity * sd.close_price as amount,
+//                    s.currency
+//             FROM stocks s
+//             JOIN stock_data sd ON sd.date >= s.purchase_date
+//             WHERE sd.date = (SELECT MAX(date) FROM stock_data)
+//             ORDER BY s.purchase_date ASC`,
+//                 resultKey: 'stocks'
+//             },
+//             {
+//                 name: 'cash',
+//                 query: `SELECT c.timestamp as date, c.delta_amount as amount, c.currency 
+//                         FROM cash c ORDER BY c.timestamp ASC`,
+//                 resultKey: 'cash'
+//             },
+//             {
+//                 name: 'deposits',
+//                 query: `SELECT d.start_date as date, d.principal as amount, d.currency 
+//                         FROM deposit d ORDER BY d.start_date ASC`,
+//                 resultKey: 'deposits'
+//             },
+//             {
+//                 name: 'funds',
+//                 query: `SELECT f.purchase_date as date, f.purchase_price*f.units as amount, f.currency 
+//                         FROM funds f ORDER BY f.purchase_date ASC`,
+//                 resultKey: 'funds'
+//             },
+//             {
+//                 name: 'bonds',
+//                 query: `SELECT g.start_date as date, g.amount as amount, g.currency 
+//                         FROM bonds g ORDER BY g.start_date ASC`,
+//                 resultKey: 'bonds'
+//             },
+//             {
+//                 name: 'others',
+//                 query: `SELECT o.purchase_date as date, o.purchase_amount as amount, o.currency 
+//                         FROM others o ORDER BY o.purchase_date ASC`,
+//                 resultKey: 'others'
+//             }
+//         ];
+
+//         // 初始化结果对象
+//         const result = {
+//             stocks: [],
+//             cash: [],
+//             deposits: [],
+//             funds: [],
+//             bonds: [],
+//             others: []
+//         };
+
+//         // 获取汇率数据（因为汇率不会变动，所以只需要查询一次）
+//         const exchangeRatesQuery = `
+//             SELECT currency_code, rate_to_cny
+//             FROM exchange_rates
+//         `;
+//         const exchangeRates = await query(exchangeRatesQuery);
+
+//         // 创建汇率映射，按货币代码存储
+//         const currencyRates = new Map();
+//         exchangeRates.forEach(rate => {
+//             currencyRates.set(rate.currency_code, rate.rate_to_cny);
+//         });
+
+//         // 处理每个类别
+//         for (const category of categories) {
+//             // 执行查询
+//             const queryResult = await query(category.query);
+
+//             // 转换金额为人民币
+//             const convertedResult = queryResult.map(item => {
+//                 const itemDate = item.date;
+//                 const currency = item.currency || 'CNY'; // 默认为人民币
+//                 const originalAmount = parseFloat(item.amount);
+
+//                 // 如果已经是人民币，直接返回
+//                 if (currency === 'CNY') {
+//                     return {
+//                         date: itemDate,
+//                         amount: originalAmount,
+//                         currency: 'CNY'
+//                     };
+//                 }
+
+//                 // 获取汇率，如果没有找到则使用默认值1
+//                 const exchangeRate = currencyRates.get(currency) || 1;
+
+//                 // 计算人民币金额
+//                 const cnyAmount = originalAmount * exchangeRate;
+
+//                 return {
+//                     date: itemDate,
+//                     amount: cnyAmount,
+//                     currency: 'CNY'
+//                 };
+//             });
+
+//             // 将转换后的结果添加到结果对象中
+//             result[category.resultKey] = convertedResult;
+//         }
+
+//         // 返回结果
+//         return res.status(200).json(result);
+
+//     } catch (error) {
+//         console.error('Error fetching time series data:', error);
+//         return res.status(500).json({ error: 'Database query failed' });
+//     }
+// }
+
 async function getTimeSeriesDataInCNY(req, res) {
-    try {
-        // 定义类别配置
-        const categories = [
-            {
-                name: 'stocks',
-                query: `SELECT s.purchase_date as date, s.purchase_price*s.quantity as amount, s.currency 
-                        FROM stocks s ORDER BY s.purchase_date ASC`,
-                resultKey: 'stocks'
-            },
-            {
-                name: 'cash',
-                query: `SELECT c.timestamp as date, c.delta_amount as amount, c.currency 
-                        FROM cash c ORDER BY c.timestamp ASC`,
-                resultKey: 'cash'
-            },
-            {
-                name: 'deposits',
-                query: `SELECT d.start_date as date, d.principal as amount, d.currency 
-                        FROM deposit d ORDER BY d.start_date ASC`,
-                resultKey: 'deposits'
-            },
-            {
-                name: 'funds',
-                query: `SELECT f.purchase_date as date, f.purchase_price*f.units as amount, f.currency 
-                        FROM funds f ORDER BY f.purchase_date ASC`,
-                resultKey: 'funds'
-            },
-            {
-                name: 'bonds',
-                query: `SELECT g.start_date as date, g.amount as amount, g.currency 
-                        FROM government_bonds g ORDER BY g.start_date ASC`,
-                resultKey: 'bonds'
-            },
-            {
-                name: 'others',
-                query: `SELECT o.purchase_date as date, o.purchase_amount as amount, o.currency 
-                        FROM others o ORDER BY o.purchase_date ASC`,
-                resultKey: 'others'
-            }
-        ];
+  try {
+    const exchangeRatesQuery = `SELECT currency_code, rate_to_cny FROM exchange_rates`;
+    const exchangeRates = await query(exchangeRatesQuery);
 
-        // 初始化结果对象
-        const result = {
-            stocks: [],
-            cash: [],
-            deposits: [],
-            funds: [],
-            bonds: [],
-            others: []
+    const rateMap = new Map();
+    exchangeRates.forEach(rate => {
+      rateMap.set(rate.currency_code, rate.rate_to_cny);
+    });
+
+    const convertToCNY = (rows) => {
+      return rows.map(row => {
+        const rate = rateMap.get(row.currency) || 1;
+        return {
+          date: row.date,
+          amount: parseFloat((row.amount * rate).toFixed(2)),
+          currency: 'CNY'
         };
+      });
+    };
 
-        // 获取汇率数据（因为汇率不会变动，所以只需要查询一次）
-        const exchangeRatesQuery = `
-            SELECT currency_code, rate_to_cny
-            FROM exchange_rates
-        `;
-        const exchangeRates = await query(exchangeRatesQuery);
+    const [stocks, cash, deposits, funds, bonds, others] = await Promise.all([
+      getStockTimeSeries(),
+      getCashTimeSeries(),
+      getDepositTimeSeries(),
+      getFundTimeSeries(),
+      getBondTimeSeries(),
+      getOthersTimeSeries()
+    ]);
 
-        // 创建汇率映射，按货币代码存储
-        const currencyRates = new Map();
-        exchangeRates.forEach(rate => {
-            currencyRates.set(rate.currency_code, rate.rate_to_cny);
-        });
+    const result = {
+      stocks: convertToCNY(stocks),
+      cash: convertToCNY(cash),
+      deposits: convertToCNY(deposits),
+      funds: convertToCNY(funds),
+      bonds: convertToCNY(bonds),
+      others: convertToCNY(others)
+    };
 
-        // 处理每个类别
-        for (const category of categories) {
-            // 执行查询
-            const queryResult = await query(category.query);
-            
-            // 转换金额为人民币
-            const convertedResult = queryResult.map(item => {
-                const itemDate = item.date;
-                const currency = item.currency || 'CNY'; // 默认为人民币
-                const originalAmount = parseFloat(item.amount);
-                
-                // 如果已经是人民币，直接返回
-                if (currency === 'CNY') {
-                    return {
-                        date: itemDate,
-                        amount: originalAmount,
-                        currency: 'CNY'
-                    };
-                }
-                
-                // 获取汇率，如果没有找到则使用默认值1
-                const exchangeRate = currencyRates.get(currency) || 1;
-                
-                // 计算人民币金额
-                const cnyAmount = originalAmount * exchangeRate;
-                
-                return {
-                    date: itemDate,
-                    amount: cnyAmount,
-                    currency: 'CNY'
-                };
-            });
-            
-            // 将转换后的结果添加到结果对象中
-            result[category.resultKey] = convertedResult;
-        }
+    return res.status(200).json(result);
 
-        // 返回结果
-        return res.status(200).json(result);
-
-    } catch (error) {
-        console.error('Error fetching time series data:', error);
-        return res.status(500).json({ error: 'Database query failed' });
-    }
+  } catch (err) {
+    console.error('Error generating time series data:', err);
+    return res.status(500).json({ error: 'Failed to generate time series data' });
+  }
 }
+
 
 module.exports = {
     getSummaryData,
