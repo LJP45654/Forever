@@ -2,6 +2,7 @@ import { type ChartConfig } from "../ui/chart";
 import DataCard from "../dataCard";
 import DataPieChart from "../chart/dataPieChart";
 import DataLineChart from "../chart/dataLineChart";
+import DataTableChart from "../chart/datatableChart";
 
 const data = [
   { name: "Cash", value: 400 },
@@ -40,7 +41,7 @@ function Home() {
             chartConfig={chartConfig}
             colors={colors}
             data={data}
-            innerRadius={0}
+            innerRadius={10}
             outerRadius={100}
             cx={200}
             cy={120}
@@ -66,7 +67,9 @@ function Home() {
       <DataCard title="Card 4">
         <DataLineChart />
       </DataCard>
-      <DataCard title="Card 5">{/* <DataLineChart /> */}</DataCard>
+      <DataCard title="Summary of Inverstments">
+        < DataTableChart/>
+      </DataCard>
     </div>
   );
 }
