@@ -8,89 +8,109 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-import { getdata } from "@/services/getdata";
-const url = 'https://example.com/api/homepage';
-getdata(url)
-  .then(data => console.log(data))
-  .catch(error => console.error(error));
-
-const exampleData = {
-  sum: "6597386.60",
-  assets: {
-    ticker: {
-      amount: "809162.00",
-      list_num: 5,
-      total_earnings: "824676.00",
-    },
-    cash: {
-      amount: "7389.60",
-      list_num: 4,
-    },
-    deposit: {
-      amount: "1050640.00",
-      list_num: 3,
-    },
-    funds: {
-      amount: "399355.00",
-      list_num: 5,
-      total_earnings: "379275.00",
-    },
-    bonds: {
-      amount: "4225000.00",
-      list_num: 4,
-    },
-    othersSum: {
-      amount: "105840.00",
-      list_num: 5,
-      total_earnings: "100800.00",
-    },
-  },
-};
-
-// const headname = Object.keys(exampleData.assets.othersSum).join(", ");
-
 function DataTableChart() {
-  const totalAmount = Object.values(exampleData.assets).reduce(
-    (sum, asset) => sum + parseFloat(asset.amount),
-    0
-  );
-
-  //动态生成表头
-  const tableHeaders = [
-    "Investment Type",
-    ...new Set(
-      Object.values(exampleData.assets).flatMap((asset) =>
-        Object.keys(asset)
-      )
-    ),
-    "Percentage",
-  ];
-
   return (
     <Table>
+      <TableCaption>The summary of your investments.</TableCaption>
       <TableHeader>
         <TableRow>
-          {tableHeaders.map((header) => (
-            <TableHead key={header}>{header}</TableHead>
-          ))}
+          <TableHead className="w-[150px]">Investment Type</TableHead>
+          <TableHead>Amount</TableHead>
+          <TableHead>Percentage</TableHead>
+          <TableHead>Today's Earnings</TableHead>
+          <TableHead className="text-right">Total Earnings</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
-        {Object.entries(exampleData.assets).map(([key, value]) => (
-          <TableRow key={key}>
-            <TableCell>{key}</TableCell>
-            <TableCell>{value.amount}</TableCell>
-            <TableCell>{value.list_num}</TableCell>
-            <TableCell>
-              {"total_earnings" in value ? value.total_earnings.toString() : "-"}
-            </TableCell>
-            <TableCell>
-              {((parseFloat(value.amount) / totalAmount) * 100).toFixed(2)}%
-            </TableCell>
+        <TableRow>
+          <TableCell className="font-medium">Cash</TableCell>
+          <TableCell>$2,000</TableCell>
+          <TableCell>10%</TableCell>
+          <TableCell>—</TableCell>
+          <TableCell className="text-right">-</TableCell>
+        </TableRow>
+        <TableRow>
+          <TableCell className="font-medium">Deposit</TableCell>
+          <TableCell>$3,000</TableCell>
+          <TableCell>15%</TableCell>
+          <TableCell>$30</TableCell>
+          <TableCell className="text-right">$800</TableCell>
+        </TableRow>
+        <TableRow>
+          <TableCell className="font-medium">Bonds</TableCell>
+          <TableCell>$5,000</TableCell>
+          <TableCell>25%</TableCell>
+          <TableCell>$50</TableCell>
+          <TableCell className="text-right">$1,000</TableCell>
+        </TableRow>
+        <TableRow>
+          <TableCell className="font-medium">Stocks</TableCell>
+          <TableCell>$10,000</TableCell>
+          <TableCell>50%</TableCell>
+          <TableCell>$200</TableCell>
+          <TableCell className="text-right">$5,000</TableCell>
+        </TableRow>
+        <TableRow>
+          <TableCell className="font-medium">Fund</TableCell>
+          <TableCell>$4,000</TableCell>
+          <TableCell>20%</TableCell>
+          <TableCell>$80</TableCell>
+          <TableCell className="text-right">$1,500</TableCell>
+        </TableRow>
+        <TableRow>
+          <TableCell className="font-medium">Others</TableCell>
+          <TableCell>$1,000</TableCell>
+          <TableCell>5%</TableCell>
+          <TableCell>$10</TableCell>
+          <TableCell className="text-right">$300</TableCell>
+        </TableRow>
+      </TableBody>
+    </Table>
+  );
+
+import { useEffect, useState } from "react";
+
+function DataTableChart() {
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const response = await fetch("/api/investments"); // Replace with your API endpoint
+        const jsonData = await response.json();
+        setData(jsonData);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    }
+    fetchData();
+  }, []);
+
+  return (
+    <Table>
+      <TableCaption>The summary of your investments.</TableCaption>
+      <TableHeader>
+        <TableRow>
+          <TableHead className="w-[150px]">Investment Type</TableHead>
+          <TableHead>Amount</TableHead>
+          <TableHead>Percentage</TableHead>
+          <TableHead>Today's Earnings</TableHead>
+          <TableHead className="text-right">Total Earnings</TableHead>
+        </TableRow>
+      </TableHeader>
+      <TableBody>
+        {data.map((item, index) => (
+          <TableRow key={index}>
+            <TableCell className="font-medium">{item.type}</TableCell>
+            <TableCell>{item.amount}</TableCell>
+            <TableCell>{item.percentage}</TableCell>
+            <TableCell>{item.todayEarnings}</TableCell>
+            <TableCell className="text-right">{item.totalEarnings}</TableCell>
           </TableRow>
         ))}
       </TableBody>
     </Table>
   );
+}
 }
 export default DataTableChart;
