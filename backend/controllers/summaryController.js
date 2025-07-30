@@ -37,12 +37,26 @@ async function getSummaryData(req, res) {
         const bondsSum = await query(bonds_sql);
         const bondsNum = await query(bondsCount_sql);
 
-        others_sql = `SELECT ROUND(SUM(o.purchase_amount* er.rate_to_cny),2) as others
+        others_sql = `SELECT ROUND(SUM(o.current_amount* er.rate_to_cny),2) as others
                      FROM others o
                      JOIN exchange_rates er ON o.currency = er.currency_code;`
         othersCount_sql = `SELECT COUNT(DISTINCT name) as others_count FROM others`
         const othersSum = await query(others_sql);
         const othersNum = await query(othersCount_sql);
+
+        const tickerEarning_sql = `SELECT ROUND(SUM(purchase_price*c.quantity* er.rate_to_cny),2) as ticker_earning 
+                                    FROM stocks c
+                                    JOIN exchange_rates er ON c.currency = er.currency_code;`
+        const fundsEarning_sql = `SELECT ROUND(SUM(f.units*f.purchase_price* er.rate_to_cny),2) as funds_earning
+                                    FROM funds f
+                                    JOIN exchange_rates er ON f.currency = er.currency_code;`
+        const othersEarning_sql = `SELECT ROUND(SUM(o.purchase_amount* er.rate_to_cny),2) as others_earning
+                                    FROM others o
+                                    JOIN exchange_rates er ON o.currency = er.currency_code;`
+        const tickerEarning = await query(tickerEarning_sql);
+        const fundsEarning = await query(fundsEarning_sql);
+        const othersEarning = await query(othersEarning_sql);
+
         const assets = {
             ticker: Number(tickerSum[0].ticker).toFixed(2),
             cash: cashSum[0].cash,
@@ -61,6 +75,7 @@ async function getSummaryData(req, res) {
                 ticker: {
                     amount: assets.ticker,
                     list_num:tickerNum[0].stock_count,
+                    total_earnings: Number(tickerEarning[0].ticker_earning).toFixed(2),
                 },
                 cash: {
                     amount: assets.cash,
@@ -73,6 +88,7 @@ async function getSummaryData(req, res) {
                 funds: {
                     amount: assets.funds,
                     list_num:fundsNum[0].funds_count,
+                    total_earnings: Number(fundsEarning[0].funds_earning).toFixed(2),
                 },
                 bonds: {
                     amount: assets.bonds,
@@ -81,6 +97,7 @@ async function getSummaryData(req, res) {
                 othersSum: {
                     amount: assets.othersSum,
                     list_num:othersNum[0].others_count,
+                    total_earnings: Number(othersEarning[0].others_earning).toFixed(2),
                 }
             }
         };
