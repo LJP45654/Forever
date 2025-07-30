@@ -3,8 +3,8 @@ import DataCard from "../dataCard";
 import DataPieChart from "../chart/dataPieChart";
 import DataLineChart from "../chart/dataLineChart";
 import AppToolbar from "../appToolbar";
-
 import { Badge } from "../ui/badge";
+import DataTableChart from "../chart/dataTableChart";
 
 const data = [
   { name: "Cash", value: 400 },
@@ -33,9 +33,6 @@ const chartConfig = {
     color: "#60a5fa",
   },
 } satisfies ChartConfig;
-
-
-
 function Home() {
   return (
     <div id="home" className="p-6 flex flex-col gap-6">
@@ -73,7 +70,9 @@ function Home() {
       <DataCard title="Card 4">
         <DataLineChart />
       </DataCard>
-      <DataCard title="Summary of Inverstments"></DataCard>
+      <DataCard title="Summary of Inverstments">
+        <DataTableChart/>
+      </DataCard>
     </div>
   );
 }
