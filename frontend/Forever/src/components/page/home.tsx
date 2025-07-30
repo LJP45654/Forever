@@ -2,6 +2,8 @@ import { type ChartConfig } from "../ui/chart";
 import DataCard from "../dataCard";
 import DataPieChart from "../chart/dataPieChart";
 import DataLineChart from "../chart/dataLineChart";
+import { ButtonGroup } from "../ui/button-group";
+import { Button } from "../ui/button";
 
 const data = [
   { name: "Cash", value: 400 },
@@ -40,7 +42,7 @@ function Home() {
             chartConfig={chartConfig}
             colors={colors}
             data={data}
-            innerRadius={0}
+            innerRadius={10}
             outerRadius={100}
             cx={200}
             cy={120}
@@ -56,11 +58,15 @@ function Home() {
             legend={true}
           />
         </DataCard>
-        <DataCard title="Card 2">
+        <DataCard>
           <div>Content for card 2</div>
         </DataCard>
         <DataCard title="Card 3">
-          <div>Content for card 3</div>
+          <ButtonGroup>
+            <Button variant="outline">Button 1</Button>
+            <Button variant="outline">Button 2</Button>
+            <Button variant="outline">Button 3</Button>
+          </ButtonGroup>
         </DataCard>
       </div>
       <DataCard title="Card 4">
