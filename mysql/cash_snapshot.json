@@ -1,0 +1,30 @@
+[
+  {
+    "id": 33,
+    "timestamp": "2025-07-29",
+    "currency": "CNY",
+    "balance": 1150.0,
+    "note": null
+  },
+  {
+    "id": 34,
+    "timestamp": "2025-07-29",
+    "currency": "USD",
+    "balance": 525.5,
+    "note": null
+  },
+  {
+    "id": 35,
+    "timestamp": "2025-07-29",
+    "currency": "JPY",
+    "balance": 7000.0,
+    "note": null
+  },
+  {
+    "id": 36,
+    "timestamp": "2025-07-29",
+    "currency": "EUR",
+    "balance": 270.0,
+    "note": null
+  }
+]
