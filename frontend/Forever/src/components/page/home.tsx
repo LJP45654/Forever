@@ -1,16 +1,25 @@
-import { Cell, Legend, Pie, PieChart } from "recharts";
-import { ChartContainer, type ChartConfig } from "../ui/chart";
+import { type ChartConfig } from "../ui/chart";
 import DataCard from "../dataCard";
+import DataPieChart from "../chart/dataPieChart";
+import DataLineChart from "../chart/dataLineChart";
 
 const data = [
-  { name: 'Group A', value: 400 },
-  { name: 'Group B', value: 300 },
-  { name: 'Group C', value: 300 },
-  { name: 'Group D', value: 200 },
-  { name: 'Group D', value: 200 },
-  { name: 'Group D', value: 200 },
+  { name: "Cash", value: 400 },
+  { name: "Deposit", value: 300 },
+  { name: "Bonds", value: 300 },
+  { name: "Stock", value: 200 },
+  { name: "Fund", value: 200 },
+  { name: "other", value: 50 },
 ];
-const COLORS = ['#ffa2a2', '#ffb86a', '#ffd230', '#ffdf20'];
+const colors = [
+  "#ff6467",
+  "#ff8904",
+  "#fdc700",
+  "#9ae600",
+  "#00d492",
+  "#00d3f3",
+];
+
 const chartConfig = {
   desktop: {
     label: "Desktop",
@@ -24,32 +33,42 @@ const chartConfig = {
 
 function Home() {
   return (
-    <DataCard title='Current Asset'>
-      <ChartContainer config={chartConfig} className="min-h-[200px] w-full">
-        <PieChart>
-          <Pie
+    <div id="home" className="p-6 flex flex-col gap-6">
+      <div className="grid gap-6">
+        <DataCard title="$1,250.00" description="Current Asset" badge={10}>
+          <DataPieChart
+            chartConfig={chartConfig}
+            colors={colors}
             data={data}
-            innerRadius={60}
-            outerRadius={80}
-            fill="#8884d8"
-            paddingAngle={5}
-            dataKey="value"
-          >
-            {data.map((entry, index) => (
-              <Cell key={`cell-${entry.name}`} fill={COLORS[index % COLORS.length]} />
-            ))}
-          </Pie>
-          <Legend
+            innerRadius={0}
+            outerRadius={100}
+            cx={200}
+            cy={120}
+            gradientOffset={1.4}
             layout="vertical"
-            align="right"
-            verticalAlign="middle"
+            align="left"
+            verticalAlign="top"
             iconType="square"
-            wrapperStyle={{ paddingLeft: '20px', lineHeight: '24px' }}
+            wrapperStyle={{
+              lineHeight: "40px",
+              fontSize: "14px",
+            }}
+            legend={true}
           />
-        </PieChart>
-      </ChartContainer>
-    </DataCard>
+        </DataCard>
+        <DataCard title="Card 2">
+          <div>Content for card 2</div>
+        </DataCard>
+        <DataCard title="Card 3">
+          <div>Content for card 3</div>
+        </DataCard>
+      </div>
+      <DataCard title="Card 4">
+        <DataLineChart />
+      </DataCard>
+      <DataCard title="Card 5">{/* <DataLineChart /> */}</DataCard>
+    </div>
   );
 }
 
-export default Home
+export default Home;

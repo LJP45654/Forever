@@ -1,0 +1,280 @@
+import React, { useState } from "react";
+import {
+  CartesianGrid,
+  Cell,
+  Legend,
+  Pie,
+  PieChart,
+  Sector,
+  type SectorProps,
+} from "recharts";
+import { ChartContainer } from "../ui/chart";
+
+interface PieChartData {
+  name: string;
+  value: number;
+  [key: string]: any;
+}
+interface PieChartProps {
+  cx?: number;
+  cy?: number;
+  colors?: string[];
+  data: PieChartData[];
+  chartConfig?: any;
+  innerRadius?: number;
+  outerRadius?: number;
+  gradientOffset?: number;
+  layout?: "horizontal" | "vertical";
+  align?: "left" | "center" | "right";
+  verticalAlign?: "top" | "middle" | "bottom";
+  iconType?:
+    | "line"
+    | "plainline"
+    | "square"
+    | "rect"
+    | "circle"
+    | "cross"
+    | "diamond"
+    | "star"
+    | "triangle"
+    | "wye";
+  wrapperStyle?: React.CSSProperties;
+  legend: Boolean;
+}
+
+type PieSectorDataItem = React.SVGProps<SVGPathElement> &
+  Partial<SectorProps> & {
+    percent?: number;
+    name?: string | number;
+    midAngle?: number;
+    payload?: any;
+    gradientOffset?: number;
+  };
+
+const createGradient = (
+  cx: number,
+  cy: number,
+  angle: number,
+  radius: number,
+  percent: number,
+  fill: string,
+  gradientId: string
+) => (
+  <radialGradient
+    id={gradientId}
+    cx={cx + radius * Math.cos((-Math.PI / 180) * angle)}
+    cy={cy + radius * Math.sin((-Math.PI / 180) * angle)}
+    r={radius}
+    gradientUnits="userSpaceOnUse"
+  >
+    <stop offset="0%" stopColor={fill} stopOpacity={0.8} />
+    <stop offset={`${percent * 2}`} stopColor={fill} stopOpacity={0.6} />
+    <stop
+      offset={`${percent < 0.1 ? 0.5 : percent * 5}`}
+      stopColor="#FFFFFF"
+      stopOpacity={0.1}
+    />
+  </radialGradient>
+);
+const renderActiveShape = (props: PieSectorDataItem) => {
+  const {
+    cx = 0,
+    cy = 0,
+    midAngle = 0,
+    innerRadius = 0,
+    outerRadius = 0,
+    startAngle = 0,
+    endAngle = 0,
+    fill = "#8884d8",
+    payload,
+    percent = 0,
+    gradientOffset = 1.5,
+  } = props;
+
+  const RADIAN = Math.PI / 180;
+  const angle = midAngle ?? (startAngle + endAngle) / 2;
+  const baseRadius = (innerRadius + outerRadius) / 2;
+  const gradientRadius = baseRadius * gradientOffset;
+  const gradientId = `gradient-active-${angle}-${gradientRadius}`;
+
+  // 标签位置计算
+  const cos = Math.cos(-RADIAN * midAngle);
+  const sin = Math.sin(-RADIAN * midAngle);
+  const sx = cx + (outerRadius + 10) * cos;
+  const sy = cy + (outerRadius + 10) * sin;
+  const mx = cx + (outerRadius + 20) * cos;
+  const my = cy + (outerRadius + 20) * sin;
+  const ex = mx + (cos >= 0 ? 1 : -1) * 22;
+  const ey = my;
+  const textAnchor = cos >= 0 ? "start" : "end";
+
+  return (
+    <g>
+      <text
+        x={cx}
+        y={cy}
+        dy={8}
+        textAnchor="middle"
+        fill={fill}
+        className="text-xl font-bold"
+      >
+        {payload?.name}
+      </text>
+      <defs>
+        {createGradient(
+          cx,
+          cy,
+          angle,
+          gradientRadius,
+          percent,
+          fill,
+          gradientId
+        )}
+      </defs>
+      <Sector
+        cx={cx}
+        cy={cy}
+        innerRadius={innerRadius}
+        outerRadius={outerRadius}
+        startAngle={startAngle}
+        endAngle={endAngle}
+        fill={`url(#${gradientId})`}
+        cornerRadius={10}
+      />
+      <Sector
+        cx={cx}
+        cy={cy}
+        startAngle={startAngle}
+        endAngle={endAngle}
+        innerRadius={outerRadius + 6}
+        outerRadius={outerRadius + 10}
+        fill={fill}
+        cornerRadius={10}
+      />
+      <path
+        d={`M${sx},${sy}L${mx},${my}L${ex},${ey}`}
+        stroke={fill}
+        fill="none"
+        strokeWidth={2}
+      />
+      <text
+        x={ex + (cos >= 0 ? 1 : -1) * 12}
+        y={ey}
+        dy={5}
+        textAnchor={textAnchor}
+        fill={fill}
+        className="text-[16px]"
+      >
+        {`${(percent * 100).toFixed(2)}%`}
+      </text>
+    </g>
+  );
+};
+const renderInactiveShape = (props: PieSectorDataItem) => {
+  const {
+    cx = 0,
+    cy = 0,
+    midAngle = 0,
+    innerRadius = 0,
+    outerRadius = 0,
+    startAngle = 0,
+    endAngle = 0,
+    fill = "#8884d8",
+    gradientOffset = 1.5,
+    percent = 0,
+  } = props;
+
+  const angle = midAngle ?? (startAngle + endAngle) / 2;
+  const baseRadius = (innerRadius + outerRadius) / 2;
+  const gradientRadius = baseRadius * gradientOffset;
+  const gradientId = `gradient-inactive-${angle}-${gradientRadius}`;
+
+  return (
+    <>
+      <defs>
+        {createGradient(
+          cx,
+          cy,
+          angle,
+          gradientRadius,
+          percent,
+          fill,
+          gradientId
+        )}
+      </defs>
+      <Sector
+        cx={cx}
+        cy={cy}
+        innerRadius={innerRadius}
+        outerRadius={outerRadius}
+        startAngle={startAngle}
+        endAngle={endAngle}
+        fill={`url(#${gradientId})`}
+        cornerRadius={10}
+      />
+    </>
+  );
+};
+
+function DataPieChart({
+  cx,
+  cy,
+  data,
+  colors,
+  chartConfig,
+  innerRadius = 60,
+  outerRadius = 120,
+  gradientOffset = 1.5,
+  layout,
+  align,
+  verticalAlign,
+  iconType,
+  wrapperStyle,
+  legend = true,
+}: PieChartProps) {
+  const [activeIndex, setActiveIndex] = useState(0);
+
+  const createShapeRenderer = (isActive: boolean) => (shapeProps: any) => {
+    const renderer = isActive ? renderActiveShape : renderInactiveShape;
+    return renderer({ ...shapeProps, gradientOffset });
+  };
+
+  return (
+    <ChartContainer config={chartConfig}>
+      <PieChart>
+        <Pie
+          activeIndex={activeIndex}
+          activeShape={createShapeRenderer(true)}
+          inactiveShape={createShapeRenderer(false)}
+          data={data}
+          cx={cx}
+          cy={cy}
+          innerRadius={innerRadius}
+          outerRadius={outerRadius}
+          fill="#8884d8"
+          dataKey="value"
+          onMouseEnter={(_, index) => setActiveIndex(index)}
+        >
+          {colors &&
+            data.map((entry, index) => (
+              <Cell
+                key={`cell-${entry.name}`}
+                fill={colors[index % colors.length]}
+              />
+            ))}
+        </Pie>
+        {legend && (
+          <Legend
+            layout={layout}
+            align={align}
+            verticalAlign={verticalAlign}
+            iconType={iconType}
+            wrapperStyle={wrapperStyle}
+          />
+        )}
+      </PieChart>
+    </ChartContainer>
+  );
+}
+
+export default DataPieChart;
