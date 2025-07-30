@@ -67,5 +67,50 @@ function DataTableChart() {
       </TableBody>
     </Table>
   );
+
+import { useEffect, useState } from "react";
+
+function DataTableChart() {
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const response = await fetch("/api/investments"); // Replace with your API endpoint
+        const jsonData = await response.json();
+        setData(jsonData);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    }
+    fetchData();
+  }, []);
+
+  return (
+    <Table>
+      <TableCaption>The summary of your investments.</TableCaption>
+      <TableHeader>
+        <TableRow>
+          <TableHead className="w-[150px]">Investment Type</TableHead>
+          <TableHead>Amount</TableHead>
+          <TableHead>Percentage</TableHead>
+          <TableHead>Today's Earnings</TableHead>
+          <TableHead className="text-right">Total Earnings</TableHead>
+        </TableRow>
+      </TableHeader>
+      <TableBody>
+        {data.map((item, index) => (
+          <TableRow key={index}>
+            <TableCell className="font-medium">{item.type}</TableCell>
+            <TableCell>{item.amount}</TableCell>
+            <TableCell>{item.percentage}</TableCell>
+            <TableCell>{item.todayEarnings}</TableCell>
+            <TableCell className="text-right">{item.totalEarnings}</TableCell>
+          </TableRow>
+        ))}
+      </TableBody>
+    </Table>
+  );
+}
 }
 export default DataTableChart;
