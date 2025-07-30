@@ -140,11 +140,34 @@ async function deleteCashRecords(req, res) {
   }
 }
 
+async function getCashTimeSeries() {
+  const sql = `
+    SELECT 
+      c.timestamp AS date,
+      ROUND(SUM(c.delta_amount) OVER (PARTITION BY c.currency ORDER BY c.timestamp) * er.rate_to_cny, 2) AS amount
+    FROM cash c
+    JOIN exchange_rates er ON c.currency = er.currency_code
+    ORDER BY c.timestamp;
+  `;
+  return await query(sql);
+}
+
+async function getAllCashTimeSeries(req,res) {
+  try {
+      res.json(await getCashTimeSeries());
+    } catch (error) {
+      console.error('Error fetching ticker names:', error);
+      res.status(500).json({ error: 'Database query failed' });
+    }
+}
+
 
 module.exports = {
   getAllCashRecords,
   getBalanceSnapshot,
   updateBalanceSnapshot,
   insertCashRecords,
-  deleteCashRecords
+  deleteCashRecords,
+  getCashTimeSeries,
+  getAllCashTimeSeries
 }

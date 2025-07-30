@@ -1,4 +1,5 @@
 const { query } = require('../utils/db.js');
+const { fetchAndSaveData, deleteTickersByCode } = require('./stockDataController.js');
 
 async function getTickerNames(req, res) {
   try {
@@ -26,11 +27,114 @@ async function getTickerRecords(req, res) {
   }
 }
 
-async function updateHistoryRecords(req, res) {
-  
+async function getStockTimeSeries() {
+  const sql = `
+    SELECT sd.date AS date,
+           ROUND(SUM(s.quantity * sd.close_price),2) AS amount,
+           s.currency
+    FROM stocks s
+    JOIN stock_data sd ON sd.ticker = s.stock_code AND sd.date >= s.purchase_date
+    GROUP BY sd.date, s.currency
+    ORDER BY sd.date ASC;
+  `;
+  return await query(sql);
 }
 
+async function getAllStockTimeSeries(req, res) {
+  try {
+    res.json(await getStockTimeSeries());
+  } catch (error) {
+    console.error('Error fetching ticker names:', error);
+    res.status(500).json({ error: 'Database query failed' });
+  }
+}
 
+async function getStockTimeSeriesById(req, res) {
+  try {
+    const id = req.params.id;
+    const sql = `
+    SELECT 
+      sd.date AS date,
+      FORMAT(s.quantity * sd.close_price,2) AS amount,
+      s.currency
+    FROM stocks s
+    JOIN stock_data sd 
+      ON sd.ticker = s.stock_code AND sd.date >= s.purchase_date
+    WHERE s.id = ?
+    ORDER BY sd.date ASC;
+  `;
+    res.json(await query(sql, [id]));
+  } catch (error) {
+    console.error('Error fetching ticker names:', error);
+    res.status(500).json({ error: 'Database query failed' });
+  }
+}
 
+async function insertStockRecords(req, res) {
+  try {
+    const records = req.body;
 
-module.exports = { getTickerNames,getTickerRecords };
+    if (!Array.isArray(records) || records.length === 0) {
+      return res.status(400).json({ error: 'Request body must be a non-empty array.' });
+    }
+
+    // 构造 SQL 语句
+    const insertSql = `
+      INSERT INTO stock (stock_name, currency, quantity, purchase_price, purchase_date, stock_code)
+      VALUES ${records.map(() => '(?, ?, ?, ?, ?, ?)').join(', ')}
+    `;
+
+    await deleteTickersByCode(records[0].stock_code)
+    await fetchAndSaveData(records[0].stock_code)
+
+    // 展平参数数组
+    const values = records.flatMap(record => [
+      record.stock_name,
+      record.currency,
+      record.quantity,
+      record.purchase_price,
+      record.purchase_date,
+      record.stock_code
+    ]);
+
+    await query(insertSql, values);
+
+    res.status(201).json({ message: `${records.length} stock record(s) inserted successfully.` });
+  } catch (error) {
+    console.error('Error inserting stock records:', error);
+    res.status(500).json({ error: 'Failed to insert stock records.' });
+  }
+}
+
+async function deleteStockRecordsById(req, res) {
+  try {
+    const { id } = req.params;
+
+    // 简单校验
+    if (!id || isNaN(id)) {
+      return res.status(400).json({ error: 'Invalid or missing stock ID.' });
+    }
+
+    const deleteSql = 'DELETE FROM stock WHERE id = ?';
+    const result = await query(deleteSql, [id]);
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ message: 'No stock record found with that ID.' });
+    }
+
+    res.status(200).json({ message: 'Stock record deleted successfully.' });
+  } catch (error) {
+    console.error('Error deleting stock record:', error);
+    res.status(500).json({ error: 'Failed to delete stock record.' });
+  }
+}
+
+module.exports = {
+  getTickerNames,
+  getTickerRecords,
+  getStockTimeSeries,
+  getAllStockTimeSeries,
+  getStockTimeSeriesById,
+  insertStockRecords,
+  deleteStockRecordsById
+};
