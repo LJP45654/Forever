@@ -18,7 +18,7 @@ const categories = [
     items: []
   },
   {
-    title: "Bonds",
+    title: "Bond",
     url: "#",
     icon: "ri-coupon-line",
     items: []
