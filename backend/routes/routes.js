@@ -1,6 +1,7 @@
 const Router = require('express');
 const { getAllCashRecords, getBalanceSnapshot,updateBalanceSnapshot,insertCashRecords,deleteCashRecords } = require('../controllers/cashController.js');
-const { getTickerNames } = require('../controllers/stockController.js');
+const { getTickerNames,getTickerRecords } = require('../controllers/stockController.js');
+const { getSummaryData } = require('../controllers/summaryController.js');
 const { chatBot } = require('../controllers/aiController.js');
 
 const router = Router();
@@ -15,6 +16,9 @@ router.delete('/cash/delete',deleteCashRecords)
 
 // ticker routes
 router.get('/stock/name', getTickerNames);
+router.get('/stock', getTickerRecords);
+
+router.get('/summary',getSummaryData);
 
 
 router.post('/chat', chatBot);

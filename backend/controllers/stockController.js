@@ -15,4 +15,18 @@ async function getTickerNames(req, res) {
   }
 }
 
-module.exports = { getTickerNames };
+async function getTickerRecords(req, res) {
+  try {
+    sql = `SELECT * FROM stocks;`
+    const tickerRecords = await query(sql);
+    res.json(tickerRecords);
+  } catch (error) {
+    console.error('Error fetching ticker names:', error);
+    res.status(500).json({ error: 'Database query failed' });
+  }
+}
+
+
+
+
+module.exports = { getTickerNames,getTickerRecords };
