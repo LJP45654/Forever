@@ -3,7 +3,9 @@ import DataCard from "../dataCard";
 import DataPieChart from "../chart/dataPieChart";
 import DataLineChart from "../chart/dataLineChart";
 import { ButtonGroup } from "../ui/button-group";
-import { Button } from "../ui/button";
+import {Button } from "../ui/button";
+import DataTableChart from "../chart/datatableChart";
+import TableToolbar from "../tableToolbar";
 
 const data = [
   { name: "Cash", value: 400 },
@@ -69,8 +71,9 @@ function Home() {
         <DataLineChart />
       </DataCard>
       <DataCard title="Summary of Inverstments">
-        < DataTableChart/>
+        <DataTableChart/>
       </DataCard>
+      <TableToolbar></TableToolbar>
     </div>
   );
 }
