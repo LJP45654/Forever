@@ -126,18 +126,10 @@ function DataLineChart() {
       >
         <CartesianGrid vertical={false} />
         <defs>
-          <linearGradient id="temp" x1="0" y1="0" x2="0" y2="1">
-            <stop
-              offset="5%"
-              stopColor="var(--color-desktop)"
-              stopOpacity={1.0}
-            />
-            <stop
-              offset="95%"
-              stopColor="var(--color-desktop)"
-              stopOpacity={0.1}
-            />
-          </linearGradient>
+            <radialGradient id="temp" cx="2px" cy="2px" r="4px">
+              <stop offset="0%" stopColor="#000000" stopOpacity="0.8" />
+              <stop offset="100%" stopColor="#000000" stopOpacity="0.2" />
+            </radialGradient>
         </defs>
         <XAxis
           dataKey="month"
@@ -151,6 +143,14 @@ function DataLineChart() {
           cursor={false}
           content={<ChartTooltipContent indicator="dot" />}
         />
+        {/* <Area
+          dataKey="mobile"
+          type="natural"
+          fill='url(#yellowGradient)'
+          fillOpacity={0.6}
+          stroke="url(#yellowGradient)"
+          stackId="a"
+        /> */}
         <Area
           dataKey="desktop"
           type="natural"
