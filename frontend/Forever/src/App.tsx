@@ -1,23 +1,29 @@
-import { useState } from 'react'
 import './App.css'
 import 'remixicon/fonts/remixicon.css'
-import HomeSidebar from './components/homeSidebar'
-import { SidebarInset, SidebarProvider, SidebarTrigger } from './components/ui/sidebar'
+import { SidebarInset, SidebarProvider } from './components/ui/sidebar'
+import { Route, Routes } from 'react-router-dom'
+
+import Home from './components/page/home'
+import AppSidebar from './components/appSidebar'
+import AppHeader from './components/appHeader'
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
     <>
-      <SidebarProvider>
-        <HomeSidebar />
+      <SidebarProvider style={{
+        '--sidebar-width': '20rem',
+        '--sidebar-width-mobile': '20rem',
+        '--header-height': 'calc(var(--spacing) * 12)'
+      } as React.CSSProperties}>
+        <AppSidebar variant='inset' />
         <SidebarInset>
-        <div className="card">
-          <SidebarTrigger />
-          <button onClick={() => setCount((count) => count + 1)}>
-            count is {count}
-          </button>
-        </div>
+          <div className='flex flex-1 flex-col'>
+            <AppHeader />
+            <Routes>
+              <Route path='/' element={<Home />} />
+              <Route path='Cash' element={<Home />} />
+            </Routes>
+          </div>
         </SidebarInset>
       </SidebarProvider>
     </>
