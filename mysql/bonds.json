@@ -1,0 +1,202 @@
+[
+  {
+    "id": 1,
+    "bond_name": "1年期国债",
+    "currency": "CNY",
+    "amount": 20000.0,
+    "rate": 1.8,
+    "start_date": "2025-03-01",
+    "end_date": "2026-03-01",
+    "interest": 360.0
+  },
+  {
+    "id": 2,
+    "bond_name": "3年期国债",
+    "currency": "USD",
+    "amount": 30000.0,
+    "rate": 2.75,
+    "start_date": "2025-05-10",
+    "end_date": "2028-05-10",
+    "interest": 2477.26
+  },
+  {
+    "id": 3,
+    "bond_name": "5年期国债",
+    "currency": "CNY",
+    "amount": 50000.0,
+    "rate": 2.3,
+    "start_date": "2025-04-18",
+    "end_date": "2030-04-18",
+    "interest": 5753.15
+  },
+  {
+    "id": 4,
+    "bond_name": "10年期国债",
+    "currency": "CNY",
+    "amount": 100000.0,
+    "rate": 2.65,
+    "start_date": "2025-02-15",
+    "end_date": "2035-02-15",
+    "interest": 26514.52
+  },
+  {
+    "id": 5,
+    "bond_name": "3年期国债",
+    "currency": "JPY",
+    "amount": 6000000.0,
+    "rate": 0.4,
+    "start_date": "2025-06-01",
+    "end_date": "2028-06-01",
+    "interest": 72065.75
+  },
+  {
+    "id": 6,
+    "bond_name": "1年期国债",
+    "currency": "CNY",
+    "amount": 15000.0,
+    "rate": 1.75,
+    "start_date": "2025-07-01",
+    "end_date": "2026-07-01",
+    "interest": 262.5
+  },
+  {
+    "id": 7,
+    "bond_name": "5年期国债",
+    "currency": "USD",
+    "amount": 80000.0,
+    "rate": 3.0,
+    "start_date": "2025-03-20",
+    "end_date": "2030-03-20",
+    "interest": 12006.58
+  },
+  {
+    "id": 8,
+    "bond_name": "10年期国债",
+    "currency": "CNY",
+    "amount": 120000.0,
+    "rate": 2.55,
+    "start_date": "2025-04-10",
+    "end_date": "2035-04-10",
+    "interest": 30616.77
+  },
+  {
+    "id": 9,
+    "bond_name": "1年期国债",
+    "currency": "CNY",
+    "amount": 10000.0,
+    "rate": 1.6,
+    "start_date": "2025-05-01",
+    "end_date": "2026-05-01",
+    "interest": 160.0
+  },
+  {
+    "id": 10,
+    "bond_name": "3年期国债",
+    "currency": "CNY",
+    "amount": 25000.0,
+    "rate": 2.05,
+    "start_date": "2025-06-15",
+    "end_date": "2028-06-15",
+    "interest": 1538.9
+  },
+  {
+    "id": 11,
+    "bond_name": "5年期国债",
+    "currency": "CNY",
+    "amount": 70000.0,
+    "rate": 2.4,
+    "start_date": "2025-02-20",
+    "end_date": "2030-02-20",
+    "interest": 8404.6
+  },
+  {
+    "id": 12,
+    "bond_name": "10年期国债",
+    "currency": "USD",
+    "amount": 200000.0,
+    "rate": 3.25,
+    "start_date": "2025-03-05",
+    "end_date": "2035-03-05",
+    "interest": 65035.62
+  },
+  {
+    "id": 13,
+    "bond_name": "3年期国债",
+    "currency": "CNY",
+    "amount": 30000.0,
+    "rate": 2.1,
+    "start_date": "2025-07-20",
+    "end_date": "2028-07-20",
+    "interest": 1891.73
+  },
+  {
+    "id": 14,
+    "bond_name": "1年期国债",
+    "currency": "JPY",
+    "amount": 1000000.0,
+    "rate": 0.25,
+    "start_date": "2025-05-30",
+    "end_date": "2026-05-30",
+    "interest": 2500.0
+  },
+  {
+    "id": 15,
+    "bond_name": "5年期国债",
+    "currency": "USD",
+    "amount": 95000.0,
+    "rate": 2.95,
+    "start_date": "2025-02-01",
+    "end_date": "2030-02-01",
+    "interest": 14020.18
+  },
+  {
+    "id": 16,
+    "bond_name": "1年期国债",
+    "currency": "CNY",
+    "amount": 12000.0,
+    "rate": 1.65,
+    "start_date": "2025-06-10",
+    "end_date": "2026-06-10",
+    "interest": 198.0
+  },
+  {
+    "id": 17,
+    "bond_name": "3年期国债",
+    "currency": "CNY",
+    "amount": 28000.0,
+    "rate": 2.0,
+    "start_date": "2025-04-05",
+    "end_date": "2028-04-05",
+    "interest": 1681.53
+  },
+  {
+    "id": 18,
+    "bond_name": "5年期国债",
+    "currency": "CNY",
+    "amount": 65000.0,
+    "rate": 2.45,
+    "start_date": "2025-01-25",
+    "end_date": "2030-01-25",
+    "interest": 7966.86
+  },
+  {
+    "id": 19,
+    "bond_name": "10年期国债",
+    "currency": "CNY",
+    "amount": 90000.0,
+    "rate": 2.6,
+    "start_date": "2025-03-12",
+    "end_date": "2035-03-12",
+    "interest": 23412.82
+  },
+  {
+    "id": 20,
+    "bond_name": "3年期国债",
+    "currency": "USD",
+    "amount": 45000.0,
+    "rate": 2.85,
+    "start_date": "2025-06-05",
+    "end_date": "2028-06-05",
+    "interest": 3851.01
+  }
+]
