@@ -1,7 +1,7 @@
 const Router = require('express');
 const { getAllCashRecords, getBalanceSnapshot,updateBalanceSnapshot,insertCashRecords,deleteCashRecords } = require('../controllers/cashController.js');
 const { getTickerNames,getTickerRecords } = require('../controllers/stockController.js');
-const { getSummaryData } = require('../controllers/summaryController.js');
+const { getSummaryData,getSearchData,getTimeSeriesDataInCNY } = require('../controllers/summaryController.js');
 const { chatBot } = require('../controllers/aiController.js');
 
 const router = Router();
@@ -14,12 +14,14 @@ router.post('/cash/balance/snapshot', updateBalanceSnapshot);//测试用，前�
 router.post('/cash/insert',insertCashRecords)
 router.delete('/cash/delete',deleteCashRecords)
 
-// ticker routes
+// Stock routes
 router.get('/stock/name', getTickerNames);
 router.get('/stock', getTickerRecords);
 
+//总面板和搜索栏
 router.get('/summary',getSummaryData);
-
+router.get('/search',getSearchData);
+router.get('/timeline',getTimeSeriesDataInCNY)
 
 router.post('/chat', chatBot);
 

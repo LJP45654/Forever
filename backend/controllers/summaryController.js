@@ -58,18 +58,18 @@ async function getAssetDetails() {
                                FROM others o
                                JOIN exchange_rates er ON o.currency = er.currency_code;`;
 
-    const [tickerNum, cashNum, depositNum, fundsNum, bondsNum, othersNum, 
-           tickerEarning, fundsEarning, othersEarning] = await Promise.all([
-        query(stockCount_sql),
-        query(cashCount_sql),
-        query(depositCount_sql),
-        query(fundsCount_sql),
-        query(bondsCount_sql),
-        query(othersCount_sql),
-        query(tickerEarning_sql),
-        query(fundsEarning_sql),
-        query(othersEarning_sql)
-    ]);
+    const [tickerNum, cashNum, depositNum, fundsNum, bondsNum, othersNum,
+        tickerEarning, fundsEarning, othersEarning] = await Promise.all([
+            query(stockCount_sql),
+            query(cashCount_sql),
+            query(depositCount_sql),
+            query(fundsCount_sql),
+            query(bondsCount_sql),
+            query(othersCount_sql),
+            query(tickerEarning_sql),
+            query(fundsEarning_sql),
+            query(othersEarning_sql)
+        ]);
 
     return {
         tickerNum: tickerNum[0].stock_count,
@@ -138,6 +138,212 @@ async function getSummaryData(req, res) {
     }
 }
 
+async function getSearchData(req, res) {
+    try {
+        const { search } = req.body;
+        if (!search) {
+            return res.status(400).json({ error: "搜索关键词不能为空" });
+        }
+
+        // 定义类别配置
+        const categories = [
+            {
+                name: 'stocks',
+                subCategoryQuery: `SELECT DISTINCT stock_name as value FROM stocks`,
+                searchQuery: `SELECT * FROM stocks WHERE stock_name LIKE ?`,
+                resultKey: 'stocks'
+            },
+            {
+                name: 'cash',
+                subCategoryQuery: `SELECT DISTINCT currency as value FROM cash`,
+                searchQuery: `SELECT * FROM cash WHERE currency LIKE ?`,
+                resultKey: 'cash'
+            },
+            {
+                name: 'deposits',
+                subCategoryQuery: `SELECT DISTINCT currency as value FROM deposit`,
+                searchQuery: `SELECT * FROM deposit WHERE currency LIKE ?`,
+                resultKey: 'deposits'
+            },
+            {
+                name: 'funds',
+                subCategoryQuery: `SELECT DISTINCT fund_name as value FROM funds`,
+                searchQuery: `SELECT * FROM funds WHERE fund_name LIKE ?`,
+                resultKey: 'funds'
+            },
+            {
+                name: 'bonds',
+                subCategoryQuery: `SELECT DISTINCT bond_name as value FROM government_bonds`,
+                searchQuery: `SELECT * FROM government_bonds WHERE bond_name LIKE ?`,
+                resultKey: 'bonds'
+            },
+            {
+                name: 'others',
+                subCategoryQuery: `SELECT DISTINCT name as value FROM others`,
+                searchQuery: `SELECT * FROM others WHERE name LIKE ?`,
+                resultKey: 'others'
+            }
+        ];
+
+        // 准备搜索参数（使用参数化查询防止SQL注入）
+        const searchParam = `%${search}%`;
+
+        // 初始化结果对象
+        const result = {
+            searchResults: [],
+            data: {
+                stocks: [],
+                cash: [],
+                deposits: [],
+                funds: [],
+                bonds: [],
+                others: []
+            }
+        };
+
+        // 处理每个类别
+        for (const category of categories) {
+            // 获取子类别
+            const subCategories = await query(category.subCategoryQuery);
+            const subCategoryArray = subCategories.map(item => item.value);
+            
+            // 检查是否有匹配
+            const hasMatch = subCategoryArray.some(item => 
+                item.toLowerCase().includes(search.toLowerCase())
+            );
+            
+            // 将匹配状态添加到结果中
+            result.searchResults.push(hasMatch);
+            
+            // 如果有匹配，执行搜索查询
+            if (hasMatch) {
+                const searchResults = await query(category.searchQuery, [searchParam]);
+                result.data[category.resultKey] = searchResults;
+            }
+        }
+
+        // 返回结果
+        return res.status(200).json(result);
+
+    } catch (error) {
+        console.error('Error fetching search data:', error);
+        return res.status(500).json({ error: 'Database query failed' });
+    }
+}
+
+async function getTimeSeriesDataInCNY(req, res) {
+    try {
+        // 定义类别配置
+        const categories = [
+            {
+                name: 'stocks',
+                query: `SELECT s.purchase_date as date, s.purchase_price*s.quantity as amount, s.currency 
+                        FROM stocks s ORDER BY s.purchase_date ASC`,
+                resultKey: 'stocks'
+            },
+            {
+                name: 'cash',
+                query: `SELECT c.timestamp as date, c.delta_amount as amount, c.currency 
+                        FROM cash c ORDER BY c.timestamp ASC`,
+                resultKey: 'cash'
+            },
+            {
+                name: 'deposits',
+                query: `SELECT d.start_date as date, d.principal as amount, d.currency 
+                        FROM deposit d ORDER BY d.start_date ASC`,
+                resultKey: 'deposits'
+            },
+            {
+                name: 'funds',
+                query: `SELECT f.purchase_date as date, f.purchase_price*f.units as amount, f.currency 
+                        FROM funds f ORDER BY f.purchase_date ASC`,
+                resultKey: 'funds'
+            },
+            {
+                name: 'bonds',
+                query: `SELECT g.start_date as date, g.amount as amount, g.currency 
+                        FROM government_bonds g ORDER BY g.start_date ASC`,
+                resultKey: 'bonds'
+            },
+            {
+                name: 'others',
+                query: `SELECT o.purchase_date as date, o.purchase_amount as amount, o.currency 
+                        FROM others o ORDER BY o.purchase_date ASC`,
+                resultKey: 'others'
+            }
+        ];
+
+        // 初始化结果对象
+        const result = {
+            stocks: [],
+            cash: [],
+            deposits: [],
+            funds: [],
+            bonds: [],
+            others: []
+        };
+
+        // 获取汇率数据（因为汇率不会变动，所以只需要查询一次）
+        const exchangeRatesQuery = `
+            SELECT currency_code, rate_to_cny
+            FROM exchange_rates
+        `;
+        const exchangeRates = await query(exchangeRatesQuery);
+
+        // 创建汇率映射，按货币代码存储
+        const currencyRates = new Map();
+        exchangeRates.forEach(rate => {
+            currencyRates.set(rate.currency_code, rate.rate_to_cny);
+        });
+
+        // 处理每个类别
+        for (const category of categories) {
+            // 执行查询
+            const queryResult = await query(category.query);
+            
+            // 转换金额为人民币
+            const convertedResult = queryResult.map(item => {
+                const itemDate = item.date;
+                const currency = item.currency || 'CNY'; // 默认为人民币
+                const originalAmount = parseFloat(item.amount);
+                
+                // 如果已经是人民币，直接返回
+                if (currency === 'CNY') {
+                    return {
+                        date: itemDate,
+                        amount: originalAmount,
+                        currency: 'CNY'
+                    };
+                }
+                
+                // 获取汇率，如果没有找到则使用默认值1
+                const exchangeRate = currencyRates.get(currency) || 1;
+                
+                // 计算人民币金额
+                const cnyAmount = originalAmount * exchangeRate;
+                
+                return {
+                    date: itemDate,
+                    amount: cnyAmount,
+                    currency: 'CNY'
+                };
+            });
+            
+            // 将转换后的结果添加到结果对象中
+            result[category.resultKey] = convertedResult;
+        }
+
+        // 返回结果
+        return res.status(200).json(result);
+
+    } catch (error) {
+        console.error('Error fetching time series data:', error);
+        return res.status(500).json({ error: 'Database query failed' });
+    }
+}
+
 module.exports = {
     getSummaryData,
+    getSearchData,
+    getTimeSeriesDataInCNY
 }
