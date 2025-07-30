@@ -24,6 +24,7 @@ async function fetchAndSaveData() {
     for (const ticker of tickers) {
         const requestResponse = await axios.get(`https://api.tiingo.com/tiingo/daily/${ticker}/prices?startDate=${date}&endDate=${date}&token=048ca6c7209d97f335a1182aed10769a1c8fb8e6`, { headers })
         const requestResponseData = requestResponse.data;
+        console.log(requestResponseData);
         const close = requestResponseData.map((item) => item.close);
         const closePrice = close[0];
         await connection.execute(
