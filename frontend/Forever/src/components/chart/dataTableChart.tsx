@@ -8,6 +8,12 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
+import { getdata } from "@/services/getdata";
+const url = 'https://example.com/api/homepage';
+getdata(url)
+  .then(data => console.log(data))
+  .catch(error => console.error(error));
+
 const exampleData = {
   sum: "6597386.60",
   assets: {
