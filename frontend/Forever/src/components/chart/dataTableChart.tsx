@@ -52,7 +52,11 @@ function DataTableChart() {
   //动态生成表头
   const tableHeaders = [
     "Investment Type",
-    ...Object.keys(Object.values(exampleData.assets)[0]),
+    ...new Set(
+      Object.values(exampleData.assets).flatMap((asset) =>
+        Object.keys(asset)
+      )
+    ),
     "Percentage",
   ];
 
@@ -60,9 +64,9 @@ function DataTableChart() {
     <Table>
       <TableHeader>
         <TableRow>
-        {tableHeaders.map((header) => (
+          {tableHeaders.map((header) => (
             <TableHead key={header}>{header}</TableHead>
-        ))}
+          ))}
         </TableRow>
       </TableHeader>
       <TableBody>
