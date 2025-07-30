@@ -3,7 +3,9 @@ import DataCard from "../dataCard";
 import DataPieChart from "../chart/dataPieChart";
 import DataLineChart from "../chart/dataLineChart";
 import { ButtonGroup } from "../ui/button-group";
-import { Button } from "../ui/button";
+import {Button } from "../ui/button";
+import DataTableChart from "../chart/dataTableChart";
+import TableToolbar from "../tableToolbar";
 
 const data = [
   { name: "Cash", value: 400 },
@@ -33,7 +35,7 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-function Home() {
+function Home(){
   return (
     <div id="home" className="p-6 flex flex-col gap-6">
       <div className="grid gap-6">
@@ -69,7 +71,7 @@ function Home() {
         <DataLineChart />
       </DataCard>
       <DataCard title="Summary of Inverstments">
-        < DataTableChart/>
+        <DataTableChart/>
       </DataCard>
     </div>
   );
