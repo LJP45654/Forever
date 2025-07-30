@@ -26,6 +26,10 @@ async function getTickerRecords(req, res) {
   }
 }
 
+async function updateHistoryRecords(req, res) {
+  
+}
+
 
 
 
