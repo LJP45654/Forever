@@ -62,11 +62,7 @@ function Home() {
           <div>Content for card 2</div>
         </DataCard>
         <DataCard title="Card 3">
-          <ButtonGroup>
-            <Button variant="outline">Button 1</Button>
-            <Button variant="outline">Button 2</Button>
-            <Button variant="outline">Button 3</Button>
-          </ButtonGroup>
+          <ButtonGroup></ButtonGroup>
         </DataCard>
       </div>
       <DataCard title="Card 4">
