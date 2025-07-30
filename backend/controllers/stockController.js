@@ -1,5 +1,5 @@
 const { query } = require('../utils/db.js');
-const { fetchAndSaveData, deleteTickersByCode } = require('./stockDataController.js');
+const { updateTickersByCode, deleteTickersByCode } = require('./stockDataController.js');
 
 async function getTickerNames(req, res) {
   try {
@@ -80,13 +80,14 @@ async function insertStockRecords(req, res) {
 
     // 构造 SQL 语句
     const insertSql = `
-      INSERT INTO stock (stock_name, currency, quantity, purchase_price, purchase_date, stock_code)
-      VALUES ${records.map(() => '(?, ?, ?, ?, ?, ?)').join(', ')}
+      INSERT INTO stocks (stock_name, currency, quantity, purchase_price, purchase_date,current_price, stock_code)
+      VALUES ${records.map(() => '(?, ?, ?, ?, ?,?, ?)').join(', ')}
     `;
 
     await deleteTickersByCode(records[0].stock_code)
-    await fetchAndSaveData(records[0].stock_code)
+    const current_price = await updateTickersByCode(records[0].stock_code)
 
+    console.log(current_price)
     // 展平参数数组
     const values = records.flatMap(record => [
       record.stock_name,
@@ -94,12 +95,13 @@ async function insertStockRecords(req, res) {
       record.quantity,
       record.purchase_price,
       record.purchase_date,
+      current_price,
       record.stock_code
     ]);
 
     await query(insertSql, values);
 
-    res.status(201).json({ message: `${records.length} stock record(s) inserted successfully.` });
+    res.status(201).json({ message: `${records.length} stocks record(s) inserted successfully.` });
   } catch (error) {
     console.error('Error inserting stock records:', error);
     res.status(500).json({ error: 'Failed to insert stock records.' });
@@ -115,7 +117,7 @@ async function deleteStockRecordsById(req, res) {
       return res.status(400).json({ error: 'Invalid or missing stock ID.' });
     }
 
-    const deleteSql = 'DELETE FROM stock WHERE id = ?';
+    const deleteSql = 'DELETE FROM stocks WHERE id = ?';
     const result = await query(deleteSql, [id]);
 
     if (result.affectedRows === 0) {

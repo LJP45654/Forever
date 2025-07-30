@@ -1,8 +1,6 @@
 .kiro
 .vscode
 .gitignore
-backend
-mysql
 UIDesign
 frontend\Forever\node_modules
 frontend\Forever\package-lock.json
