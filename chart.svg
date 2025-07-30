@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="128" height="128" viewBox="0 0 128 128"
+     xmlns="http://www.w3.org/2000/svg" fill="none">
+
+  <!-- 背景：极淡雾白 -->
+  <rect width="128" height="128" rx="26" fill="#F8FBFF"/>
+
+  <!-- 水平时间轴 -->
+  <line x1="28" y1="96" x2="100" y2="96"
+        stroke="#D0E3FF" stroke-width="2"/>
+
+  <!-- E 字 K 线：三段上扬折线 -->
+  <polyline points="32,80 48,68 64,72 80,56 96,60"
+            stroke="#0072FF" stroke-width="4"
+            stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- 在折线右侧补一竖，让负形自然呈现「E」 -->
+  <line x1="96" y1="60" x2="96" y2="80"
+        stroke="#0072FF" stroke-width="4"
+        stroke-linecap="round"/>
+</svg>
