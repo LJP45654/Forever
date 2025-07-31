@@ -5,7 +5,7 @@ const { getSummaryData, getSearchData, getTimeSeriesDataInCNY } = require('../co
 const { chatBot } = require('../controllers/aiController.js');
 const { deleteTickersByCode, updateTickersByCode } = require('../controllers/stockDataController.js')
 const { getAllDepositRecord, insertDepositRecord,deleteDepositRecordById,updateDepositRecordById, } = require('../controllers/depositController.js');
-const { getAllFundRecord } = require('../controllers/fundController.js');
+const { getAllFundRecord,deleteFundRecordById, updateFundRecordById, insertFundRecord } = require('../controllers/fundController.js');
 const { getAllOtherRecords } = require('../controllers/othersController.js')
 const { getAllBondRecords } = require('../controllers/bondController.js')
 
@@ -41,6 +41,9 @@ router.post('/deposit/update', updateDepositRecordById);
 
 // funds routes
 router.get('/funds', getAllFundRecord);
+router.post('/funds/insert', insertFundRecord);
+router.delete('/funds/delete', deleteFundRecordById);
+router.post('/funds/update', updateFundRecordById);
 
 // others routes
 router.get('/others', getAllOtherRecords);
