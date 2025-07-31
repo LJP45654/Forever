@@ -1,0 +1,56 @@
+{
+  "investment": [
+    { "header": "Investment_Type", "type": "string" },
+    { "header": "Amount", "type": "number" },
+    { "header": "Total_Earnings", "type": "number" },
+    { "header": "Percentage", "type": "number" }
+  ],
+  "cash": [
+    { "header": "Currency_Type", "type": "string" },
+    { "header": "Amount", "type": "number" },
+    { "header": "Date", "type": "string" },
+    { "header": "Note", "type": "string" }
+  ],
+  "deposit": [
+    { "header": "Currency_Type", "type": "string" },
+    { "header": "Amount", "type": "number" },
+    { "header": "Rate", "type": "number" },
+    { "header": "Start_Date", "type": "string" },
+    { "header": "End_Date", "type": "string" },
+    { "header": "Expected_Interest", "type": "number" }
+  ],
+  "bond": [
+    { "header": "Bond_Name", "type": "string" },
+    { "header": "Currency_Type", "type": "string" },
+    { "header": "Amount", "type": "number" },
+    { "header": "Rate", "type": "number" },
+    { "header": "Start_Date", "type": "string" },
+    { "header": "End_Date", "type": "string" },
+    { "header": "Expected Interest", "type": "number" }
+  ],
+  "stock": [
+    { "header": "Stock_Name", "type": "string" },
+    { "header": "Currency_Type", "type": "string" },
+    { "header": "Quantity", "type": "number" },
+    { "header": "Purchase_price", "type": "number" },
+    { "header": "Purchase_date", "type": "string" },
+    { "header": "Current_price", "type": "number" },
+    { "header": "Profit_loss", "type": "number" }
+  ],
+  "fund": [
+    { "header": "Fund_Name", "type": "string" },
+    { "header": "Currency_Type", "type": "string" },
+    { "header": "Units", "type": "number" },
+    { "header": "Purchase_price", "type": "number" },
+    { "header": "Purchase_date", "type": "string" },
+    { "header": "Current_price", "type": "number" },
+    { "header": "Profit_loss", "type": "number" }
+  ],
+  "others": [
+    { "header": "Others_Name", "type": "string" },
+    { "header": "Currency Type", "type": "string" },
+    { "header": "Purchase_price", "type": "number" },
+    { "header": "Purchase_date", "type": "string" },
+    { "header": "Current_price", "type": "number" }
+  ]
+}

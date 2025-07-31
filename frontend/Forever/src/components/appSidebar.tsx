@@ -36,7 +36,7 @@ const categories = [
     items: []
   },
   {
-    title: "Other",
+    title: "Others",
     url: "#",
     icon: "ri-more-line",
     items: []
