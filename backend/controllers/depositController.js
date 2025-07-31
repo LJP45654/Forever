@@ -169,5 +169,5 @@ module.exports = {
   getAllDepositRecord,
   insertDepositRecord,
   deleteDepositRecordById,
-  updateDepositRecordById
+  updateDepositRecordById,
 };
