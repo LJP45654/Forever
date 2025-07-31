@@ -18,7 +18,16 @@ async function getTickerNames(req, res) {
 
 async function getTickerRecords(req, res) {
   try {
-    sql = `SELECT * FROM stocks;`
+    sql = `SELECT 
+  id,
+  stock_name,
+  currency,
+  quantity,
+  ROUND(purchase_price, 2) AS purchase_price,
+  ROUND(current_price, 2) AS current_price,
+  ROUND(profit_loss, 2) AS profit_loss,
+  DATE_FORMAT(purchase_date, '%Y-%m-%d') AS purchase_date
+FROM stocks;`
     const tickerRecords = await query(sql);
     res.json(tickerRecords);
   } catch (error) {

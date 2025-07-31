@@ -4,7 +4,7 @@ const { getTickerNames, getTickerRecords, getAllStockTimeSeries, getStockTimeSer
 const { getSummaryData, getSearchData, getTimeSeriesDataInCNY } = require('../controllers/summaryController.js');
 const { chatBot } = require('../controllers/aiController.js');
 const { deleteTickersByCode, updateTickersByCode } = require('../controllers/stockDataController.js')
-const { getAllDepositRecord } = require('../controllers/depositController.js');
+const { getAllDepositRecord, insertDepositRecord,deleteDepositRecordById,updateDepositRecordById, } = require('../controllers/depositController.js');
 const { getAllFundRecord } = require('../controllers/fundController.js');
 const { getAllOtherRecords } = require('../controllers/othersController.js')
 const { getAllBondRecords } = require('../controllers/bondController.js')
@@ -29,17 +29,21 @@ router.get('/stock', getTickerRecords);
 router.get('/stock/timeline', getAllStockTimeSeries);
 router.get('/stock/timeline/:id', getStockTimeSeriesById);
 router.post('/stock/insert', insertStockRecords);
-router.post('/stock/delete', deleteStockRecordsById)
+router.delete('/stock/delete', deleteStockRecordsById)
 router.post('/stock/update', updateStockRecords);
 
 // Deposit routes
 router.get('/deposit', getAllDepositRecord);
+router.post('/deposit/insert', insertDepositRecord);
+router.delete('/deposit/delete', deleteDepositRecordById);
+router.post('/deposit/update', updateDepositRecordById);
+
 
 // funds routes
-router.post('/funds/update', getAllFundRecord);
+router.get('/funds', getAllFundRecord);
 
 // others routes
-router.post('/others/update', getAllOtherRecords);
+router.get('/others', getAllOtherRecords);
 
 // bonds routes
 router.get('/bonds', getAllBondRecords);

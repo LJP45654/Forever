@@ -15,7 +15,12 @@ async function getAllFundRecord(req, res) {
      SELECT * FROM funds
      `;
     const result = await query(sql);
-    res.json(result);
+    const formattedResult = result.map(record => ({
+      ...record,
+      purchase_date: record.purchase_date ? record.purchase_date.toISOString().split('T')[0] : null,
+    }));
+
+    res.json(formattedResult);
 
   } catch (error) {
     console.error('Error inserting cash records:', error);

@@ -127,19 +127,29 @@ const chartConfig = {
 } satisfies ChartConfig;
 export function DataLineChart() {
   const [timeRange, setTimeRange] = React.useState("90d");
-  const filteredData = chartData.filter((item) => {
-    const date = new Date(item.date);
-    const referenceDate = new Date("2024-06-30");
-    let daysToSubtract = 90;
-    if (timeRange === "30d") {
-      daysToSubtract = 30;
-    } else if (timeRange === "7d") {
-      daysToSubtract = 7;
-    }
-    const startDate = new Date(referenceDate);
-    startDate.setDate(startDate.getDate() - daysToSubtract);
-    return date >= startDate;
-  });
+  // const filteredData = chartData.filter((item) => {
+  //   const date = new Date(item.date);
+  //   const referenceDate = new Date("2024-06-30");
+  //   let daysToSubtract = 90;
+  //   if (timeRange === "30d") {
+  //     daysToSubtract = 30;
+  //   } else if (timeRange === "7d") {
+  //     daysToSubtract = 7;
+  //   }
+  //   const startDate = new Date(referenceDate);
+  //   startDate.setDate(startDate.getDate() - daysToSubtract);
+  //   return date >= startDate;
+  // });
+  const [filteredData, setFilteredData] = React.useState(chartData);
+  React.useEffect(() => {
+    fetch('http://localhost:3002/stock/timeline')
+      .then(response => response.json())
+      .then(array => {
+        console.log(array)
+        setFilteredData(array)
+      });
+  },[]);
+
   return (
     <Card className="@container/card from-primary/2 to-card bg-gradient-to-t">
       <CardHeader>

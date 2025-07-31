@@ -18,9 +18,6 @@ import { useEffect, useState } from "react";
 //       .then(json => console.log(json))
 
 
-
-
-
 // 表头字典，所有表头写死
 const tableHeadersDictionary: Record<string, { header: string; type: string }[]> = {
   //homepage的表格
@@ -101,9 +98,6 @@ function DataTableChart(props: any) {
       .then(response => response.json())
       .then(json => setCashData(json));
   })
-  // useEffect(() => {
-  //   console.log(data);
-  // },[data])
   
   // 从字典中选择表头，homepage单独出来（因为要计算百分比）
   if (props.tableType === 'investment') {
