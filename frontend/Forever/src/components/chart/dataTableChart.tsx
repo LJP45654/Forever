@@ -7,13 +7,19 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-import exampleDatahomepage from "@/test/json/investment.json";
+//import exampleDatahomepage from "@/test/json/investment.json";
 import example_cash from "@/test/json/example_cash.ts";
 
 
-fetch('https://jsonplaceholder.typicode.com/todos/1')
+// fetch('https://jsonplaceholder.typicode.com/todos/1')
+//       .then(response => response.json())
+//       .then(json => console.log(json))
+
+const exampleDatahomepage = fetch('http://localhost:3002/summary')
       .then(response => response.json())
       .then(json => console.log(json))
+
+      
 
 // 表头字典，所有表头写死
 const tableHeadersDictionary: Record<string, { header: string; type: string }[]> = {
