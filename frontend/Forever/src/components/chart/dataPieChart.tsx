@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import {
-  CartesianGrid,
   Cell,
   Legend,
   Pie,

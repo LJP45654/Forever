@@ -70,8 +70,9 @@ function Home() {
       <DataCard title="Card 4">
         <DataLineChart />
       </DataCard>
-      <DataCard title="Summary of Inverstments">
-        <DataTableChart/>
+      <DataCard title="Summary of Investment">
+        
+        <DataTableChart tableType="cash" />
       </DataCard>
     </div>
   );
