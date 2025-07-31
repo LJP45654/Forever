@@ -54,12 +54,11 @@ function Home() {
         </div>
         <DataCard title="Card 3"></DataCard>
       </div>
-      <DataCard title="Card 4">
+      
         <DataLineChart />
-      </DataCard>
+      
       <DataCard title="Summary of Investment">
-        
-        <DataTableChart tableType="cash" />
+        <DataTableChart tableType="investment" />
       </DataCard>
     </div>
   );

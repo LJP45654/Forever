@@ -1,0 +1,32 @@
+{
+  "stock": {
+    "amount": "809162.00",
+    "list_num": 5,
+    "total_earnings": "824676.00"
+  },
+  "cash": {
+    "amount": "7389.60",
+    "list_num": 4,
+    "total_earnings": "0"
+  },
+  "deposit": {
+    "amount": "1050640.00",
+    "list_num": 3,
+    "total_earnings": "0"
+  },
+  "funds": {
+    "amount": "399355.00",
+    "list_num": 5,
+    "total_earnings": "379275.00"
+  },
+  "bonds": {
+    "amount": "4225000.00",
+    "list_num": 4,
+    "total_earnings": "0"
+  },
+  "othersSum": {
+    "amount": "105840.00",
+    "list_num": 5,
+    "total_earnings": "0"
+  }
+}
