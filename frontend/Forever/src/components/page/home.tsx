@@ -1,11 +1,9 @@
-import { type ChartConfig } from "../ui/chart";
 import DataCard from "../dataCard";
 import DataPieChart from "../chart/dataPieChart";
 import DataLineChart from "../chart/dataLineChart";
-import { ButtonGroup } from "../ui/button-group";
-import {Button } from "../ui/button";
+import AppToolbar from "../appToolbar";
+import { Badge } from "../ui/badge";
 import DataTableChart from "../chart/dataTableChart";
-import TableToolbar from "../tableToolbar";
 
 const data = [
   { name: "Cash", value: 400 },
@@ -23,25 +21,16 @@ const colors = [
   "#00d492",
   "#00d3f3",
 ];
-
-const chartConfig = {
-  desktop: {
-    label: "Desktop",
-    color: "#2563eb",
-  },
-  mobile: {
-    label: "Mobile",
-    color: "#60a5fa",
-  },
-} satisfies ChartConfig;
-
-function Home(){
+function Home() {
   return (
     <div id="home" className="p-6 flex flex-col gap-6">
       <div className="grid gap-6">
-        <DataCard title="$1,250.00" description="Current Asset" badge={10}>
+        <DataCard
+          title="$1,250.00"
+          description="Current Asset"
+          action={<Badge variant="outline">{11}</Badge>}
+        >
           <DataPieChart
-            chartConfig={chartConfig}
             colors={colors}
             data={data}
             innerRadius={10}
@@ -60,18 +49,16 @@ function Home(){
             legend={true}
           />
         </DataCard>
-        <DataCard>
-          <div>Content for card 2</div>
-        </DataCard>
-        <DataCard title="Card 3">
-          <ButtonGroup></ButtonGroup>
-        </DataCard>
+        <div className="data-card">
+          <AppToolbar />
+        </div>
+        <DataCard title="Card 3"></DataCard>
       </div>
-      <DataCard title="Card 4">
+      
         <DataLineChart />
-      </DataCard>
-      <DataCard title="Summary of Inverstments">
-        <DataTableChart/>
+      
+      <DataCard title="Summary of Investment">
+        <DataTableChart tableType="investment" />
       </DataCard>
     </div>
   );

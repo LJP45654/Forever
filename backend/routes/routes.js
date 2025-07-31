@@ -1,12 +1,13 @@
 const Router = require('express');
 const { updateCashRecords, getAllCashRecords, getAllCashTimeSeries, getBalanceSnapshot, updateBalanceSnapshot, insertCashRecords, deleteCashRecords } = require('../controllers/cashController.js');
-const { getTickerNames, getTickerRecords, getAllStockTimeSeries, getStockTimeSeriesById, insertStockRecords, deleteStockRecordsById } = require('../controllers/stockController.js');
+const { getTickerNames, getTickerRecords, getAllStockTimeSeries, getStockTimeSeriesById, insertStockRecords, deleteStockRecordsById,updateStockRecords } = require('../controllers/stockController.js');
 const { getSummaryData, getSearchData, getTimeSeriesDataInCNY } = require('../controllers/summaryController.js');
 const { chatBot } = require('../controllers/aiController.js');
 const { deleteTickersByCode, updateTickersByCode } = require('../controllers/stockDataController.js')
 const { getAllDepositRecord } = require('../controllers/depositController.js');
 const { getAllFundRecord } = require('../controllers/fundController.js');
 const { getAllOtherRecords } = require('../controllers/othersController.js')
+const { getAllBondRecords } = require('../controllers/bondController.js')
 
 
 const router = Router();
@@ -29,6 +30,7 @@ router.get('/stock/timeline', getAllStockTimeSeries);
 router.get('/stock/timeline/:id', getStockTimeSeriesById);
 router.post('/stock/insert', insertStockRecords);
 router.post('/stock/delete', deleteStockRecordsById)
+router.post('/stock/update', updateStockRecords);
 
 // Deposit routes
 router.get('/deposit', getAllDepositRecord);
@@ -38,6 +40,9 @@ router.post('/funds/update', getAllFundRecord);
 
 // others routes
 router.post('/others/update', getAllOtherRecords);
+
+// bonds routes
+router.get('/bonds', getAllBondRecords);
 
 //总面板和搜索栏
 router.get('/summary', getSummaryData);

@@ -50,6 +50,8 @@ async function updateTickersByCode(ticker) {
     }
 }
 
+
+
 async function deleteTickersByCode(code) {
     try {
         const sql = 'DELETE FROM stock_data WHERE ticker = ?';
