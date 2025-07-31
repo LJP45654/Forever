@@ -24,7 +24,7 @@ router.post('/cash/update', updateCashRecords);
 
 
 // Stock routes
-router.get('/stock/name', getTickerNames);
+router.get('/stock/currency', getTickerNames);
 router.get('/stock', getTickerRecords);
 router.get('/stock/timeline', getAllStockTimeSeries);
 router.get('/stock/timeline/:id', getStockTimeSeriesById);
