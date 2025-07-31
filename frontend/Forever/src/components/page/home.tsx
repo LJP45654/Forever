@@ -1,4 +1,3 @@
-import { type ChartConfig } from "../ui/chart";
 import DataCard from "../dataCard";
 import DataPieChart from "../chart/dataPieChart";
 import DataLineChart from "../chart/dataLineChart";
@@ -22,17 +21,6 @@ const colors = [
   "#00d492",
   "#00d3f3",
 ];
-
-const chartConfig = {
-  desktop: {
-    label: "Desktop",
-    color: "#2563eb",
-  },
-  mobile: {
-    label: "Mobile",
-    color: "#60a5fa",
-  },
-} satisfies ChartConfig;
 function Home() {
   return (
     <div id="home" className="p-6 flex flex-col gap-6">
@@ -43,7 +31,6 @@ function Home() {
           action={<Badge variant="outline">{11}</Badge>}
         >
           <DataPieChart
-            chartConfig={chartConfig}
             colors={colors}
             data={data}
             innerRadius={10}

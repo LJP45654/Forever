@@ -7,7 +7,7 @@ import {
   Sector,
   type SectorProps,
 } from "recharts";
-import { ChartContainer } from "../ui/chart";
+import { ChartContainer, type ChartConfig } from "../ui/chart";
 
 interface PieChartData {
   name: string;
@@ -19,7 +19,6 @@ interface PieChartProps {
   cy?: number;
   colors?: string[];
   data: PieChartData[];
-  chartConfig?: any;
   innerRadius?: number;
   outerRadius?: number;
   gradientOffset?: number;
@@ -220,7 +219,6 @@ function DataPieChart({
   cy,
   data,
   colors,
-  chartConfig,
   innerRadius = 60,
   outerRadius = 120,
   gradientOffset = 1.5,
@@ -237,6 +235,9 @@ function DataPieChart({
     const renderer = isActive ? renderActiveShape : renderInactiveShape;
     return renderer({ ...shapeProps, gradientOffset });
   };
+
+  const chartConfig = {
+  } satisfies ChartConfig;
 
   return (
     <ChartContainer config={chartConfig}>

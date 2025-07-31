@@ -1,5 +1,3 @@
-import * as React from "react";
-
 import {
   Select,
   SelectContent,
@@ -10,11 +8,17 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-function TagSelect() {
+function TagSelect(props: any) {
   return (
-    <Select>
+    <Select
+      disabled={props.disabled}
+      value={props.value}
+      onValueChange={props.onChange}
+    >
       <SelectTrigger className="w-[180px]">
-        <SelectValue placeholder="Select a Categories" />
+        <SelectValue
+          placeholder={props.disabled ? "" : "Select a Categories"}
+        />
       </SelectTrigger>
       <SelectContent>
         <SelectGroup>
@@ -24,11 +28,11 @@ function TagSelect() {
           <SelectItem value="Bond">Bond</SelectItem>
           <SelectItem value="Stock">Stock</SelectItem>
           <SelectItem value="Fund">Fund</SelectItem>
-          <SelectItem value="Other">Other</SelectItem>
+          <SelectItem value="Others">Others</SelectItem>
         </SelectGroup>
       </SelectContent>
     </Select>
   );
 }
 
-export default TagSelect
+export default TagSelect;

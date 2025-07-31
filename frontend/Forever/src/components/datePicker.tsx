@@ -3,14 +3,13 @@ import { ChevronDownIcon } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
-import { Label } from "@/components/ui/label";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
 
-function DatePick() {
+function DatePick(props: any) {
   const [open, setOpen] = React.useState(false);
   const [date, setDate] = React.useState<Date | undefined>(undefined);
 
@@ -21,6 +20,7 @@ function DatePick() {
           variant="outline"
           id="date"
           className="w-48 justify-between font-normal"
+          disabled={props.disabled}
         >
           {date ? date.toLocaleDateString() : "Select date"}
           <ChevronDownIcon />
@@ -34,6 +34,9 @@ function DatePick() {
           onSelect={(date) => {
             setDate(date);
             setOpen(false);
+            if (props.value) {
+              props.value(date);
+            }
           }}
         />
       </PopoverContent>

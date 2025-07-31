@@ -28,6 +28,9 @@
     --sidebar-ring: oklch(0.439 0 0);
   }
 }
+#home {
+  font-family: 'Roboto';
+}
 #home > div {
   height: 370px;
   grid-template-columns: 530px 1fr;
