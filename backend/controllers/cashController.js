@@ -2,7 +2,15 @@ const { query } = require('../utils/db.js');
 
 async function getAllCashRecords(req, res) {
   try {
-    const cashRecords = await query('SELECT * FROM cash');
+    const cashRecords = await query(`
+  SELECT 
+    id,
+    DATE_FORMAT(timestamp, '%Y-%m-%d') AS timestamp,
+    currency,
+    delta_amount,
+    note
+  FROM cash
+`);
     res.json(cashRecords);
   } catch (error) {
     console.error('Error fetching cash records:', error);
