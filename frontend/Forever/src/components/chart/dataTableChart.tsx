@@ -9,11 +9,60 @@ import {
 } from "@/components/ui/table";
 
 import { getdata } from "@/services/getdata";
+
+
 const url = 'https://example.com/api/homepage';
 getdata(url)
   .then(data => console.log(data))
   .catch(error => console.error(error));
 
+// 表头字典，所有表头写死
+const tableHeadersDictionary: Record<string, { header: string; type: string }[]> = {
+  investment: [
+    { header: "Investment Type", type: "string" },
+    { header: "Amount", type: "number" },
+    { header: "Total Earnings", type: "number" },
+    { header: "Percentage", type: "number" },
+  ],
+  cash: [
+    { header: "Asset Type", type: "string" },
+    { header: "Value", type: "number" },
+    { header: "List Number", type: "number" },
+    { header: "Percentage", type: "number" },
+  ],
+  deposit: [
+    { header: "Transaction ID", type: "string" },
+    { header: "Date", type: "string" },
+    { header: "Amount", type: "number" },
+    { header: "Status", type: "string" },
+  ],
+  bond: [
+    { header: "Total", type: "number" },
+    { header: "Average", type: "number" },
+    { header: "Maximum", type: "number" },
+    { header: "Minimum", type: "number" },
+  ],
+  stock: [
+    { header: "Stock Name", type: "string" },
+    { header: "Ticker Symbol", type: "string" },
+    { header: "Current Price", type: "number" },
+    { header: "Change", type: "number" },
+  ],
+  fund: [
+    { header: "Fund Name", type: "string" },
+    { header: "NAV", type: "number" },
+    { header: "1-Year Return", type: "number" },
+    { header: "Expense Ratio", type: "number" },
+  ],
+  other: [
+    { header: "Other Asset Type", type: "string" },
+    { header: "Value", type: "number" },
+    { header: "List Number", type: "number" },
+    { header: "Percentage", type: "number" },
+  ],
+};
+
+// 示例数据
 const exampleData = {
   sum: "6597386.60",
   assets: {
@@ -47,30 +96,15 @@ const exampleData = {
   },
 };
 
-// const headname = Object.keys(exampleData.assets.othersSum).join(", ");
-
 function DataTableChart() {
-  const totalAmount = Object.values(exampleData.assets).reduce(
-    (sum, asset) => sum + parseFloat(asset.amount),
-    0
-  );
-
-  //动态生成表头
-  const tableHeaders = [
-    "Investment Type",
-    ...new Set(
-      Object.values(exampleData.assets).flatMap((asset) =>
-        Object.keys(asset)
-      )
-    ),
-    "Percentage",
-  ];
+  // 从字典中选择表头
+  const tableHeaders = tableHeadersDictionary["investment"];
 
   return (
     <Table>
       <TableHeader>
         <TableRow>
-          {tableHeaders.map((header) => (
+        {tableHeaders.map(({header}) => (
             <TableHead key={header}>{header}</TableHead>
           ))}
         </TableRow>
@@ -80,12 +114,11 @@ function DataTableChart() {
           <TableRow key={key}>
             <TableCell>{key}</TableCell>
             <TableCell>{value.amount}</TableCell>
-            <TableCell>{value.list_num}</TableCell>
             <TableCell>
               {"total_earnings" in value ? value.total_earnings.toString() : "-"}
             </TableCell>
             <TableCell>
-              {((parseFloat(value.amount) / totalAmount) * 100).toFixed(2)}%
+              {((parseFloat(value.amount) / 100) * 100).toFixed(2)}%
             </TableCell>
           </TableRow>
         ))}
@@ -93,4 +126,5 @@ function DataTableChart() {
     </Table>
   );
 }
+
 export default DataTableChart;
