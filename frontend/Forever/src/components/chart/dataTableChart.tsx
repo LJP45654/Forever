@@ -7,19 +7,19 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
+
 //import exampleDatahomepage from "@/test/json/investment.json";
-import example_cash from "@/test/json/example_cash.ts";
+//import example_cash from "@/test/json/example_cash.ts";
+import { useEffect, useState } from "react";
 
 
 // fetch('https://jsonplaceholder.typicode.com/todos/1')
 //       .then(response => response.json())
 //       .then(json => console.log(json))
 
-const exampleDatahomepage = fetch('http://localhost:3002/summary')
-      .then(response => response.json())
-      .then(json => console.log(json))
 
-      
+
+
 
 // 表头字典，所有表头写死
 const tableHeadersDictionary: Record<string, { header: string; type: string }[]> = {
@@ -88,6 +88,22 @@ const tableHeadersDictionary: Record<string, { header: string; type: string }[]>
 
 function DataTableChart(props: any) {
   //console.log(tableHeadersDictionary);
+  const [data, setData] = useState<any>([]);
+  const [example_cash,setCashData]= useState<any>([]);
+
+  useEffect(() => {
+    const exampleDatahomepage = fetch('http://localhost:3002/summary')
+      .then(response => response.json())
+      .then(json => setData(json));
+  }, []);
+  useEffect(() => {
+    fetch('http://localhost:3002/cash')
+      .then(response => response.json())
+      .then(json => setCashData(json));
+  })
+  // useEffect(() => {
+  //   console.log(data);
+  // },[data])
   
   // 从字典中选择表头，homepage单独出来（因为要计算百分比）
   if (props.tableType === 'investment') {
@@ -101,7 +117,7 @@ function DataTableChart(props: any) {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {Object.entries(exampleDatahomepage).map(([key, value]) => (
+          {Object.entries(data).map(([key, value]) => (
             <TableRow key={key}>
               <TableCell>{key}</TableCell>
               <TableCell>{value.amount}</TableCell>
@@ -111,7 +127,7 @@ function DataTableChart(props: any) {
               <TableCell>
                 {(
                   (parseFloat(value.amount) /
-                    Object.values(exampleDatahomepage).reduce(
+                    Object.values(data).reduce(
                       (sum, asset) => sum + parseFloat(asset.amount),
                       0
                     )) *
