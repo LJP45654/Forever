@@ -1,10 +1,19 @@
 const client = require('../config/ai.js').client;
 
-messages = [];
+messages = [
+  {
+    "role": "user",
+    "content": "你好，我是咨询人，想咨询金融服务相关内容，后续我将提问，请扮演分析师为我解答。每次输出控制在70字内."
+  },
+  {
+    "role": "assistant",
+    "content": "好的"
+  }
+];
 
 async function chatBot(req, res) {
   try {
-    const { messages: clientMessages, query } = req.body;
+    const { query } = req.body;
 
     // 验证输入
     if (!query) {
@@ -15,7 +24,7 @@ async function chatBot(req, res) {
     }
 
     // 如果客户端传入了消息历史，使用它；否则使用服务器存储的
-    const conversationHistory = clientMessages || messages;
+    const conversationHistory = messages;
 
     // 添加用户的新查询
     conversationHistory.push({ role: 'user', content: query });
