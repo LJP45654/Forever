@@ -35,7 +35,7 @@ const tableHeadersDictionary: Record<string, { header: string; type: string }[]>
     { header: "Expected_Interest", type: "number" },
   ],
   //bond的表格
-  'bond': [
+  'bonds': [
     { header: "Bond_Name", type: "string" },
     { header: "Currency_Type", type: "string" },
     { header: "Amount", type: "number" },
@@ -55,7 +55,7 @@ const tableHeadersDictionary: Record<string, { header: string; type: string }[]>
     { header: "Profit_loss", type: "number" },
   ],
   //fund的表格
-  'fund': [
+  'funds': [
     { header: "Fund_Name", type: "string" },
     { header: "Currency_Type", type: "string" },
     { header: "Units", type: "number" },
@@ -77,12 +77,13 @@ const tableHeadersDictionary: Record<string, { header: string; type: string }[]>
 function DataTableChart(props: any) {
   //console.log(tableHeadersDictionary);
   const [total_data, setData] = useState<any>([]);
-  const [cash_data,setCashData]= useState<any>([]);
-  const [deposit_data,setDepositData]= useState<any>([]);
-  const [bond_data,setBondData]= useState<any>([]);
-  const [stock_data,setStockData]= useState<any>([]);
-  const [fund_data,setFundData]= useState<any>([]);
-  const [others_data,setOthersData]= useState<any>([]);
+  const [cash_data, setCashData] = useState<any>([]);
+  const [deposit_data, setDepositData] = useState<any>([]);
+  const [bonds_data, setBondsData] = useState<any>([]);
+  const [stock_data, setStockData] = useState<any>([]);
+  const [funds_data, setFundsData] = useState<any>([]);
+  const [others_data, setOthersData] = useState<any>([]);
+
 
   useEffect(() => {
     const exampleDatahomepage = fetch('http://localhost:3002/summary')
@@ -100,9 +101,9 @@ function DataTableChart(props: any) {
       .then(json => setDepositData(json));
   }, []);
   useEffect(() => {
-    fetch('http://localhost:3002/bond')
+    fetch('http://localhost:3002/bonds')
       .then(response => response.json())
-      .then(json => setBondData(json));
+      .then(json => setBondsData(json));
   }, []);
   useEffect(() => {
     fetch('http://localhost:3002/stock')
@@ -110,9 +111,9 @@ function DataTableChart(props: any) {
       .then(json => setStockData(json));
   }, []);
   useEffect(() => {
-    fetch('http://localhost:3002/fund')
+    fetch('http://localhost:3002/funds')
       .then(response => response.json())
-      .then(json => setFundData(json));
+      .then(json => setFundsData(json));
   }, []);
   useEffect(() => {
     fetch('http://localhost:3002/others')
@@ -156,14 +157,14 @@ function DataTableChart(props: any) {
       </Table>
     );
   }
-  else if (props.tableType === 'cash' || props.tableType === 'deposit' || props.tableType === 'bond' || props.tableType === 'stock' || props.tableType === 'fund' || props.tableType === 'others') {
-    
+  else if (props.tableType === 'cash' || props.tableType === 'deposit' || props.tableType === 'bonds' || props.tableType === 'stock' || props.tableType === 'funds' || props.tableType === 'others') {
+
     const dataDictionary = {
       cash: cash_data,
       deposit: deposit_data,
-      bond: bond_data,
+      bond: bonds_data,
       stock: stock_data,
-      fund: fund_data,
+      funds: funds_data,
       others: others_data,
     };
 
@@ -172,7 +173,7 @@ function DataTableChart(props: any) {
     return (
       <div
         style={{
-          maxHeight: `${350}px`, 
+          maxHeight: `${350}px`,
           overflowY: "auto",
         }}
       >
@@ -185,8 +186,7 @@ function DataTableChart(props: any) {
                 ))}
               </TableRow>
             </TableHeader>
-             <TableBody>
-              {/* Use currentTableData instead of hardcoded cash_data */}
+            <TableBody>
               {currentTableData.map((item, index) => (
                 <TableRow key={index}>
                   {Object.entries(item).map(([key, value]) =>
