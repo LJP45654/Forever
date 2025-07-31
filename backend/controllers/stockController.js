@@ -131,6 +131,40 @@ async function deleteStockRecordsById(req, res) {
   }
 }
 
+async function updateStockRecords(req, res) {
+  try {
+    const { id, stock_name, currency, quantity, purchase_price, purchase_date, stock_code } = req.body;
+
+    // 简单校验
+    if (!id || isNaN(id)) {
+      return res.status(400).json({ error: 'Invalid or missing stock ID.' });
+    }
+
+    const getCurrentPriceSql = `
+  SELECT close_price AS current_price
+  FROM stock_data
+  WHERE stock_code = ?
+  ORDER BY date DESC
+  LIMIT 1
+`;
+
+    const current_price = await query(getCurrentPriceSql, [stock_code]);
+
+    const updateSql = `
+      UPDATE stocks
+      SET stock_name = ?, currency = ?, quantity = ?, purchase_price = ?, purchase_date = ?, current_price = ?, stock_code = ?
+      WHERE id = ?
+      `
+
+    await query(updateSql, [stock_name, currency, quantity, purchase_price, purchase_date, current_price, stock_code, id]);
+
+    res.status(200).json({ message: 'Stock record updated successfully.' });
+  } catch (error) {
+    console.error('Error updating stock record:', error);
+    res.status(500).json({ error: 'Failed to update stock record.' });
+  }
+}
+
 module.exports = {
   getTickerNames,
   getTickerRecords,
@@ -138,5 +172,6 @@ module.exports = {
   getAllStockTimeSeries,
   getStockTimeSeriesById,
   insertStockRecords,
-  deleteStockRecordsById
+  deleteStockRecordsById,
+  updateStockRecords
 };
