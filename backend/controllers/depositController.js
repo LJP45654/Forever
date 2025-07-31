@@ -8,4 +8,22 @@ async function getDepositTimeSeries() {
   return await query(sql);
 }
 
-module.exports = { getDepositTimeSeries };
+async function getAllDepositRecord(req, res) {
+  try {
+    const sql = `
+     SELECT * FROM deposit
+     `;
+    const result = await query(sql);
+    res.json(result);
+
+  } catch (error) {
+    console.error('Error inserting cash records:', error);
+    res.status(500).json({ error: 'Failed to insert records' });
+  }
+
+}
+
+module.exports = { 
+  getDepositTimeSeries,
+  getAllDepositRecord
+ };

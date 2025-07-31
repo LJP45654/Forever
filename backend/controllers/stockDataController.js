@@ -28,7 +28,8 @@ async function updateTickersByCode(ticker) {
         const headers = {
             'Content-Type': 'application/json'
         }
-        const requestResponse = await axios.get(`https://api.tiingo.com/tiingo/daily/${ticker}/prices?startDate=${dateHalfYearAgo}&endDate=${date}&token=048ca6c7209d97f335a1182aed10769a1c8fb8e6`, { headers })
+        const requestResponse = await axios.get(`https://api.tiingo.com/tiingo/daily/${ticker}/prices?
+            startDate=${dateHalfYearAgo}&endDate=${date}&token=048ca6c7209d97f335a1182aed10769a1c8fb8e6`, { headers })
         const requestResponseData = requestResponse.data;
         const insertQuery = `
     INSERT INTO stock_data (date, close_price, ticker)
