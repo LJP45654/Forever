@@ -7,16 +7,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-
-//import exampleDatahomepage from "@/test/json/investment.json";
-//import example_cash from "@/test/json/example_cash.ts";
 import { useEffect, useState } from "react";
-
-
-// fetch('https://jsonplaceholder.typicode.com/todos/1')
-//       .then(response => response.json())
-//       .then(json => console.log(json))
-
 
 // 表头字典，所有表头写死
 const tableHeadersDictionary: Record<string, { header: string; type: string }[]> = {
@@ -29,9 +20,9 @@ const tableHeadersDictionary: Record<string, { header: string; type: string }[]>
   ],
   //cash的表格
   'cash': [
+    { header: "Date", type: "string" },
     { header: "Currency_Type", type: "string" },
     { header: "Amount", type: "number" },
-    { header: "Date", type: "string" },
     { header: "Note", type: "string" },
   ],
   //deposit的表格
@@ -85,8 +76,13 @@ const tableHeadersDictionary: Record<string, { header: string; type: string }[]>
 
 function DataTableChart(props: any) {
   //console.log(tableHeadersDictionary);
-  const [data, setData] = useState<any>([]);
-  const [example_cash,setCashData]= useState<any>([]);
+  const [total_data, setData] = useState<any>([]);
+  const [cash_data,setCashData]= useState<any>([]);
+  const [deposit_data,setDepositData]= useState<any>([]);
+  const [bond_data,setBondData]= useState<any>([]);
+  const [stock_data,setStockData]= useState<any>([]);
+  const [fund_data,setFundData]= useState<any>([]);
+  const [others_data,setOthersData]= useState<any>([]);
 
   useEffect(() => {
     const exampleDatahomepage = fetch('http://localhost:3002/summary')
@@ -98,7 +94,33 @@ function DataTableChart(props: any) {
       .then(response => response.json())
       .then(json => setCashData(json));
   })
-  
+  useEffect(() => {
+    fetch('http://localhost:3002/deposit')
+      .then(response => response.json())
+      .then(json => setDepositData(json));
+  }, []);
+  useEffect(() => {
+    fetch('http://localhost:3002/bond')
+      .then(response => response.json())
+      .then(json => setBondData(json));
+  }, []);
+  useEffect(() => {
+    fetch('http://localhost:3002/stock')
+      .then(response => response.json())
+      .then(json => setStockData(json));
+  }, []);
+  useEffect(() => {
+    fetch('http://localhost:3002/fund')
+      .then(response => response.json())
+      .then(json => setFundData(json));
+  }, []);
+  useEffect(() => {
+    fetch('http://localhost:3002/others')
+      .then(response => response.json())
+      .then(json => setOthersData(json));
+  }, []);
+
+
   // 从字典中选择表头，homepage单独出来（因为要计算百分比）
   if (props.tableType === 'investment') {
     return (
@@ -111,7 +133,7 @@ function DataTableChart(props: any) {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {Object.entries(data).map(([key, value]) => (
+          {Object.entries(total_data).map(([key, value]) => (
             <TableRow key={key}>
               <TableCell>{key}</TableCell>
               <TableCell>{value.amount}</TableCell>
@@ -121,7 +143,7 @@ function DataTableChart(props: any) {
               <TableCell>
                 {(
                   (parseFloat(value.amount) /
-                    Object.values(data).reduce(
+                    Object.values(total_data).reduce(
                       (sum, asset) => sum + parseFloat(asset.amount),
                       0
                     )) *
@@ -135,6 +157,18 @@ function DataTableChart(props: any) {
     );
   }
   else if (props.tableType === 'cash' || props.tableType === 'deposit' || props.tableType === 'bond' || props.tableType === 'stock' || props.tableType === 'fund' || props.tableType === 'others') {
+    
+    const dataDictionary = {
+      cash: cash_data,
+      deposit: deposit_data,
+      bond: bond_data,
+      stock: stock_data,
+      fund: fund_data,
+      others: others_data,
+    };
+
+    const currentTableData = dataDictionary[props.tableType] || [];
+
     return (
       <div
         style={{
@@ -151,8 +185,9 @@ function DataTableChart(props: any) {
                 ))}
               </TableRow>
             </TableHeader>
-            <TableBody>
-              {example_cash.map((item, index) => (
+             <TableBody>
+              {/* Use currentTableData instead of hardcoded cash_data */}
+              {currentTableData.map((item, index) => (
                 <TableRow key={index}>
                   {Object.entries(item).map(([key, value]) =>
                     key !== "id" && <TableCell key={key}>{value}</TableCell>

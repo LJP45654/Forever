@@ -17,7 +17,7 @@ function Detail() {
       <DataCard title="Summary of Cash">
 
       
-      <DataTableChart tableType="cash" />
+      <DataTableChart tableType="fund" />
       </DataCard>
     </div>
   );
