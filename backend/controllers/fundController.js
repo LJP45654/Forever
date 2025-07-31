@@ -9,4 +9,19 @@ async function getFundTimeSeries() {
   return await query(sql);
 }
 
-module.exports = { getFundTimeSeries };
+async function getAllFundRecord(req, res) {
+  try {
+    const sql = `
+     SELECT * FROM funds
+     `;
+    const result = await query(sql);
+    res.json(result);
+
+  } catch (error) {
+    console.error('Error inserting cash records:', error);
+    res.status(500).json({ error: 'Failed to insert records' });
+  }
+
+}
+
+module.exports = { getFundTimeSeries,getAllFundRecord };

@@ -55,43 +55,43 @@ async function insertCashRecords(req, res) {
   try {
 
     const cashRecords = req.body;
-    
+
     if (!Array.isArray(cashRecords)) {
       return res.status(400).json({ error: 'Expected an array of records' });
     }
-    
+
     const invalidRecords = cashRecords.filter(record => {
       return !record.currency || record.delta_amount === undefined;
     });
-    
+
     if (invalidRecords.length > 0) {
-      return res.status(400).json({ 
+      return res.status(400).json({
         error: 'Some records are missing required fields (currency, delta_amount)',
-        invalidRecords 
+        invalidRecords
       });
     }
-    
+
     const sql = `INSERT INTO cash (timestamp, currency, delta_amount, note) VALUES ?`;
-    
+
     const currentTime = new Date().toISOString().slice(0, 19).replace('T', ' ');
-    
+
     const values = cashRecords.map(record => [
       currentTime,  // 使用当前时间
       record.currency,
       record.delta_amount,
       record.note || null  // 如果note不存在则插入NULL
     ]);
-    
+
     const result = await query(sql, [values]);
 
     updateBalanceSnapshot();
-    
+
     res.json({
       success: true,
       message: 'Records inserted successfully',
       insertedCount: result.affectedRows
     });
-    
+
   } catch (error) {
     console.error('Error inserting cash records:', error);
     res.status(500).json({ error: 'Failed to insert records' });
@@ -102,38 +102,38 @@ async function deleteCashRecords(req, res) {
   try {
 
     const { ids } = req.body;
-    
+
     if (!Array.isArray(ids)) {
       return res.status(400).json({ error: 'Expected an array of ids' });
     }
-    
+
     if (ids.length === 0) {
       return res.status(400).json({ error: 'Ids array cannot be empty' });
     }
-    
+
     const invalidIds = ids.filter(id => {
       return isNaN(id) || id <= 0;
     });
-    
+
     if (invalidIds.length > 0) {
-      return res.status(400).json({ 
+      return res.status(400).json({
         error: 'Invalid ids found. All ids must be positive numbers',
-        invalidIds 
+        invalidIds
       });
     }
-    
+
     const sql = `DELETE FROM cash WHERE id IN (?)`;
-    
+
     const result = await query(sql, [ids]);
 
     updateBalanceSnapshot();
-    
+
     res.json({
       success: true,
       message: 'Records deleted successfully',
       deletedCount: result.affectedRows
     });
-    
+
   } catch (error) {
     console.error('Error deleting cash records:', error);
     res.status(500).json({ error: 'Failed to delete records' });
@@ -152,14 +152,43 @@ async function getCashTimeSeries() {
   return await query(sql);
 }
 
-async function getAllCashTimeSeries(req,res) {
+async function getAllCashTimeSeries(req, res) {
   try {
-      res.json(await getCashTimeSeries());
-    } catch (error) {
-      console.error('Error fetching ticker names:', error);
-      res.status(500).json({ error: 'Database query failed' });
-    }
+    res.json(await getCashTimeSeries());
+  } catch (error) {
+    console.error('Error fetching ticker names:', error);
+    res.status(500).json({ error: 'Database query failed' });
+  }
 }
+
+async function updateCashRecords(req, res) {
+  try {
+    const { id, delta_amount, note } = req.body[0];
+    console.log(req.body);
+    if (!id || delta_amount === undefined) {
+      return res.status(400).json({ error: 'Missing required fields' });
+    }
+
+    const sql = `
+      UPDATE cash
+      SET delta_amount = ?, note = ?
+      WHERE id = ?`
+    
+    const result = await query(sql, [delta_amount, note, id]);
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ error: 'Record not found' });
+    } else {
+      updateBalanceSnapshot();
+      res.json({ success: true, message: 'Record updated successfully' });
+    }
+  }
+  catch (error) {
+    console.error('Error updating cash record:', error);
+    res.status(500).json({ error: 'Failed to update record' });
+  }
+}
+
 
 
 module.exports = {
@@ -169,5 +198,6 @@ module.exports = {
   insertCashRecords,
   deleteCashRecords,
   getCashTimeSeries,
-  getAllCashTimeSeries
+  getAllCashTimeSeries,
+  updateCashRecords
 }

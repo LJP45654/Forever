@@ -9,4 +9,19 @@ async function getOthersTimeSeries() {
   return await query(sql);
 }
 
-module.exports = { getOthersTimeSeries };
+async function getAllOtherRecords(req, res) {
+  try {
+    const sql = `
+     SELECT * FROM others
+     `;
+    const result = await query(sql);
+    res.json(result);
+
+  } catch (error) {
+    console.error('Error inserting cash records:', error);
+    res.status(500).json({ error: 'Failed to insert records' });
+  }
+
+}
+
+module.exports = { getOthersTimeSeries,getAllOtherRecords };
