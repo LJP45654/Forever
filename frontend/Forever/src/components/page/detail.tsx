@@ -15,7 +15,6 @@ function Detail() {
     <div id="home" className="p-6 flex flex-col gap-6">
       <DataLineChart />
       <DataCard title="Summary of Cash">
-
       
       <DataTableChart tableType="cash" />
       </DataCard>

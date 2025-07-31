@@ -4,6 +4,7 @@ import DataLineChart from "../chart/dataLineChart";
 import AppToolbar from "../appToolbar";
 import { Badge } from "../ui/badge";
 import DataTableChart from "../chart/dataTableChart";
+import Example from "../APPAI";
 
 const data = [
   { name: "Cash", value: 400 },
@@ -52,7 +53,7 @@ function Home() {
         <div className="data-card">
           <AppToolbar />
         </div>
-        <DataCard title="Card 3"></DataCard>
+        <Example />
       </div>
       
         <DataLineChart />
