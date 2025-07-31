@@ -49,7 +49,7 @@ const user = {
 }
 function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
-    <Sidebar collapsible='icon' {...props}>
+    <Sidebar collapsible='icon' style={{fontFamily: 'Roboto'}} {...props}>
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
@@ -62,10 +62,10 @@ function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarHeader>
-      <SidebarContent className='font-mono'>
+      <SidebarContent>
         <NavMain categories={categories} />
       </SidebarContent>
-      <SidebarFooter className='font-mono'>
+      <SidebarFooter>
         <NavUser user={user} />
       </SidebarFooter>
     </Sidebar>
