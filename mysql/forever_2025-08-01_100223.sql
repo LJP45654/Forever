@@ -103,7 +103,7 @@ DROP TABLE IF EXISTS `deposit`;
 CREATE TABLE `deposit` (
   `id` int NOT NULL AUTO_INCREMENT,
   `currency` varchar(10) NOT NULL,
-  `principal` double NOT NULL,
+  `amount` double NOT NULL,
   `interest_rate` double NOT NULL,
   `start_date` date NOT NULL,
   `end_date` date NOT NULL,
@@ -159,7 +159,7 @@ CREATE TABLE `funds` (
   `purchase_price` double NOT NULL,
   `purchase_date` date NOT NULL,
   `current_price` double NOT NULL,
-  `profit_loss` double GENERATED ALWAYS AS (((`current_price` - `purchase_price`) * `units`)) STORED,
+  `amount` double(10,2) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -169,7 +169,7 @@ CREATE TABLE `funds` (
 --
 
 /*!40000 ALTER TABLE `funds` DISABLE KEYS */;
-INSERT INTO `funds` (`id`, `fund_name`, `currency`, `units`, `purchase_price`, `purchase_date`, `current_price`) VALUES (1,'S&P 500 Index Fund','USD',100,400,'2025-05-01',420),(2,'Nikkei 225 ETF','JPY',200,300,'2025-04-15',290),(3,'China Bluechip Fund','CNY',150,2.5,'2025-03-10',2.8),(4,'Global Tech Growth','USD',80,150,'2025-06-05',160),(5,'Japan Mid-Cap Equity','JPY',250,120,'2025-05-20',118);
+INSERT INTO `funds` VALUES (1,'S&P 500 Index Fund','USD',100,400,'2025-05-01',420,2000.00),(2,'Nikkei 225 ETF','JPY',200,300,'2025-04-15',290,-2000.00),(3,'China Bluechip Fund','CNY',150,2.5,'2025-03-10',2.8,45.00),(4,'Global Tech Growth','USD',80,150,'2025-06-05',160,800.00),(5,'Japan Mid-Cap Equity','JPY',250,120,'2025-05-20',118,-500.00);
 /*!40000 ALTER TABLE `funds` ENABLE KEYS */;
 
 --
@@ -264,4 +264,4 @@ INSERT INTO `stocks` (`id`, `stock_name`, `currency`, `quantity`, `purchase_pric
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-08-01 10:02:31
+-- Dump completed on 2025-08-01 10:39:45
