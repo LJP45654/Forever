@@ -5,15 +5,9 @@ import AppToolbar from "../appToolbar";
 import { Badge } from "../ui/badge";
 import DataTableChart from "../chart/dataTableChart";
 import Example from "../APPAI";
+import { use, useEffect, useState } from "react";
 
-const data = [
-  { name: "Cash", value: 400 },
-  { name: "Deposit", value: 300 },
-  { name: "Bonds", value: 300 },
-  { name: "Stock", value: 200 },
-  { name: "Fund", value: 200 },
-  { name: "other", value: 50 },
-];
+
 const colors = [
   "#ff6467",
   "#ff8904",
@@ -23,6 +17,24 @@ const colors = [
   "#00d3f3",
 ];
 function Home() {
+  const [tempdata, setData] = useState<Object | undefined>(undefined);
+  useEffect(() => {
+    fetch('http://localhost:3002/summary')
+      .then(response => response.json())
+      .then(json => setData(json));
+  }, []);
+  // useEffect(() => {
+  //   console.log(tempdata?.others.amount);
+  // }, [tempdata]);
+   const data = tempdata ? [
+    { name: "Cash", value: parseFloat((tempdata as any).cash.amount) },
+    { name: "Deposit", value: parseFloat((tempdata as any).deposit.amount) },
+    { name: "Bonds", value: parseFloat((tempdata as any).bond.amount) },
+    { name: "Stock", value: parseFloat((tempdata as any).stock.amount) },
+    { name: "Fund", value: parseFloat((tempdata as any).fund.amount) },
+    { name: "Other", value: parseFloat((tempdata as any).others.amount) },
+  ] : []; 
+  console.log(data);
   return (
     <div id="home" className="p-6 flex flex-col gap-6">
       <div className="grid gap-6">
@@ -55,9 +67,9 @@ function Home() {
         </div>
         <Example />
       </div>
-      
-        <DataLineChart />
-      
+
+      <DataLineChart />
+
       <DataCard title="Summary of Investment">
         <DataTableChart tableType="investment" />
       </DataCard>
