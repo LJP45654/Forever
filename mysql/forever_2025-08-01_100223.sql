@@ -248,7 +248,7 @@ CREATE TABLE `stocks` (
 --
 
 /*!40000 ALTER TABLE `stocks` DISABLE KEYS */;
-INSERT INTO `stocks` (`id`, `stock_name`, `currency`, `quantity`, `purchase_price`, `purchase_date`, `current_price`, `stock_code`) VALUES (6,'Amazon','USD',12,132.45,'2025-05-12',138.9,'amzn'),(7,'Tesla','USD',8,252.75,'2025-04-25',266.3,'tsla'),(8,'Apple','USD',15,182.1,'2025-03-18',177.55,'aapl'),(9,'Citigroup','USD',20,46.8,'2025-06-10',47.5,'c'),(10,'Google','USD',10,2750,'2025-05-30',2880,'goog'),(13,'Amazon','USD',10,220,'2025-05-20',230.19,'AMZN'),(14,'Amazon','USD',10,220,'2025-05-20',230.19,'amzn');
+INSERT INTO `stocks` (`id`, `stock_name`, `currency`, `quantity`, `purchase_price`, `purchase_date`, `current_price`, `stock_code`) VALUES (6,'Amazon','USD',12,132.45,'2025-05-12',138.9,'amzn'),(7,'Tesla','USD',8,252.75,'2025-04-25',266.3,'tsla'),(8,'Apple','USD',15,182.1,'2025-03-18',177.55,'aapl'),(9,'Citigroup','USD',20,46.8,'2025-06-10',47.5,'c'),(10,'Google','USD',10,2750,'2025-05-30',2880,'goog');
 /*!40000 ALTER TABLE `stocks` ENABLE KEYS */;
 
 --
@@ -264,4 +264,4 @@ INSERT INTO `stocks` (`id`, `stock_name`, `currency`, `quantity`, `purchase_pric
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-08-01 11:12:36
+-- Dump completed on 2025-08-01 11:37:52
