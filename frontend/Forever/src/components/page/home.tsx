@@ -79,7 +79,7 @@ function Home() {
         </div>
       </div>
       <DataLineChart
-        url="http://localhost:3001/api/cash"
+        url="http://localhost:3002/cash"
         title="Total Assert"
       />
       <DataCard title="Summary of Investment">
