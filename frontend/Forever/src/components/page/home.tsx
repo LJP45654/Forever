@@ -34,12 +34,14 @@ function Home() {
     { name: "Fund", value: parseFloat((tempdata as any).fund.amount) },
     { name: "Other", value: parseFloat((tempdata as any).others.amount) },
   ] : []; 
-  console.log(data);
+  //计算总和
+  const totalValue = data.reduce((sum, item) => sum + item.value, 0);
+
   return (
     <div id="home" className="p-6 flex flex-col gap-6">
       <div className="grid gap-6">
         <DataCard
-          title="$1,250.00"
+          title = "122342"
           description="Current Asset"
           action={<Badge variant="outline">{11}</Badge>}
         >
