@@ -10,7 +10,7 @@ async function getAllCashRecords(req, res) {
         id,
         DATE_FORMAT(timestamp, '%Y-%m-%d') AS timestamp,
         currency,
-        amount,
+        delta_amount AS amount,
         note
       FROM cash
       WHERE currency = ?
@@ -22,7 +22,7 @@ async function getAllCashRecords(req, res) {
     id,
     DATE_FORMAT(timestamp, '%Y-%m-%d') AS timestamp,
     currency,
-    delta_amount,
+    delta_amount AS amount,
     note
   FROM cash
 `);
