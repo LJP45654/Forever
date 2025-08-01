@@ -4,10 +4,10 @@ const { getTickerNames, getTickerRecords, getAllStockTimeSeries, getStockTimeSer
 const { getSummaryData, getSearchData, getTimeSeriesDataInCNY } = require('../controllers/summaryController.js');
 const { chatBot } = require('../controllers/aiController.js');
 const { deleteTickersByCode, updateTickersByCode } = require('../controllers/stockDataController.js')
-const { getAllDepositRecord } = require('../controllers/depositController.js');
-const { getAllFundRecord } = require('../controllers/fundController.js');
-const { getAllOtherRecords } = require('../controllers/othersController.js')
-const { getAllBondRecords } = require('../controllers/bondController.js')
+const { getAllDepositRecord, insertDepositRecord,deleteDepositRecordById,updateDepositRecordById, } = require('../controllers/depositController.js');
+const { getAllFundRecord,deleteFundRecordById, updateFundRecordById, insertFundRecord } = require('../controllers/fundController.js');
+const { getAllOtherRecords,addOtherRecord,updateOtherRecord,deleteOtherRecord } = require('../controllers/othersController.js')
+const { getAllBondRecords, updateBondRecord,addBondRecord,deleteBondRecord } = require('../controllers/bondController.js')
 
 
 const router = Router();
@@ -24,7 +24,7 @@ router.post('/cash/update', updateCashRecords);
 
 
 // Stock routes
-router.get('/stock/name', getTickerNames);
+router.get('/stock/currency', getTickerNames);
 router.get('/stock', getTickerRecords);
 router.get('/stock/timeline', getAllStockTimeSeries);
 router.get('/stock/timeline/:id', getStockTimeSeriesById);
@@ -34,15 +34,28 @@ router.post('/stock/update', updateStockRecords);
 
 // Deposit routes
 router.get('/deposit', getAllDepositRecord);
+router.post('/deposit/insert', insertDepositRecord);
+router.delete('/deposit/delete', deleteDepositRecordById);
+router.post('/deposit/update', updateDepositRecordById);
+
 
 // funds routes
 router.get('/funds', getAllFundRecord);
+router.post('/funds/insert', insertFundRecord);
+router.delete('/funds/delete', deleteFundRecordById);
+router.post('/funds/update', updateFundRecordById);
 
 // others routes
 router.get('/others', getAllOtherRecords);
+router.post('/others/insert', addOtherRecord);
+router.delete('/others/delete', deleteOtherRecord);
+router.post('/others/update', updateOtherRecord);
 
 // bonds routes
 router.get('/bonds', getAllBondRecords);
+router.post('/bonds/insert', addBondRecord);
+router.delete('/bonds/delete', deleteBondRecord);
+router.post('/bonds/update', updateBondRecord);
 
 //总面板和搜索栏
 router.get('/summary', getSummaryData);

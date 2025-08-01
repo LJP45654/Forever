@@ -18,7 +18,16 @@ async function getTickerNames(req, res) {
 
 async function getTickerRecords(req, res) {
   try {
-    sql = `SELECT * FROM stocks;`
+    sql = `SELECT 
+  id,
+  stock_name,
+  currency,
+  quantity,
+  ROUND(purchase_price, 2) AS purchase_price,
+  ROUND(current_price, 2) AS current_price,
+  ROUND(profit_loss, 2) AS profit_loss,
+  DATE_FORMAT(purchase_date, '%Y-%m-%d') AS purchase_date
+FROM stocks;`
     const tickerRecords = await query(sql);
     res.json(tickerRecords);
   } catch (error) {
@@ -110,13 +119,12 @@ async function insertStockRecords(req, res) {
 
 async function deleteStockRecordsById(req, res) {
   try {
-    const { id } = req.params;
-
+    const  {id}  = req.body;
+    console.log(id)
     // 简单校验
     if (!id || isNaN(id)) {
       return res.status(400).json({ error: 'Invalid or missing stock ID.' });
     }
-
     const deleteSql = 'DELETE FROM stocks WHERE id = ?';
     const result = await query(deleteSql, [id]);
 
@@ -143,20 +151,26 @@ async function updateStockRecords(req, res) {
     const getCurrentPriceSql = `
   SELECT close_price AS current_price
   FROM stock_data
-  WHERE stock_code = ?
+  WHERE ticker = ?
   ORDER BY date DESC
   LIMIT 1
 `;
 
-    const current_price = await query(getCurrentPriceSql, [stock_code]);
+    const current_price_return = await query(getCurrentPriceSql, [stock_code]);
+
+    console.log(current_price_return[0].current_price)
+
+    const current_price = current_price_return[0].current_price
+
+    const profit_loss= (current_price - purchase_price) * quantity
 
     const updateSql = `
       UPDATE stocks
-      SET stock_name = ?, currency = ?, quantity = ?, purchase_price = ?, purchase_date = ?, current_price = ?, stock_code = ?
+      SET stock_name = ?, currency = ?, quantity = ?, purchase_price = ?, purchase_date = ?, current_price = ?,profit_loss=?, stock_code = ?
       WHERE id = ?
       `
 
-    await query(updateSql, [stock_name, currency, quantity, purchase_price, purchase_date, current_price, stock_code, id]);
+    await query(updateSql, [stock_name, currency, quantity, purchase_price, purchase_date, current_price,profit_loss, stock_code, id]);
 
     res.status(200).json({ message: 'Stock record updated successfully.' });
   } catch (error) {
