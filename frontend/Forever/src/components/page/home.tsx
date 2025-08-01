@@ -4,10 +4,18 @@ import DataLineChart from "../chart/dataLineChart";
 import AppToolbar from "../appToolbar";
 import { Badge } from "../ui/badge";
 import DataTableChart from "../chart/dataTableChart";
-import Example from "../APPAI";
-import { use, useEffect, useState } from "react";
+import NumberFlow, { continuous } from "@number-flow/react";
 
-
+import {
+  Card,
+  CardAction,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+  CardContent,
+} from "../ui/card";
+import { useState } from "react";
+import { useEffect } from "react";
 const colors = [
   "#ff6467",
   "#ff8904",
@@ -17,63 +25,66 @@ const colors = [
   "#00d3f3",
 ];
 function Home() {
-  const [tempdata, setData] = useState<Object | undefined>(undefined);
+  const [totalAssert, setTotalAssert] = useState(0);
   useEffect(() => {
-    fetch('http://localhost:3002/summary')
-      .then(response => response.json())
-      .then(json => setData(json));
+    setTimeout(() => setTotalAssert(54305), 1000);
   }, []);
-  // useEffect(() => {
-  //   console.log(tempdata?.others.amount);
-  // }, [tempdata]);
-   const data = tempdata ? [
-    { name: "Cash", value: parseFloat((tempdata as any).cash.amount) },
-    { name: "Deposit", value: parseFloat((tempdata as any).deposit.amount) },
-    { name: "Bonds", value: parseFloat((tempdata as any).bond.amount) },
-    { name: "Stock", value: parseFloat((tempdata as any).stock.amount) },
-    { name: "Fund", value: parseFloat((tempdata as any).fund.amount) },
-    { name: "Other", value: parseFloat((tempdata as any).others.amount) },
-  ] : []; 
-  //计算总和
-  const totalValue = data.reduce((sum, item) => sum + item.value, 0);
 
   return (
     <div id="home" className="p-6 flex flex-col gap-6">
       <div className="grid gap-6">
-        <DataCard
-          title = "122342"
-          description="Current Asset"
-          action={<Badge variant="outline">{11}</Badge>}
+        <Card
+          className="data-card from-primary/2 to-card bg-gradient-to-t shadow-xs py-4 gap-2"
+          style={{ fontFamily: "Roboto" }}
         >
-          <DataPieChart
-            colors={colors}
-            data={data}
-            innerRadius={10}
-            outerRadius={100}
-            cx={200}
-            cy={120}
-            gradientOffset={1.4}
-            layout="vertical"
-            align="left"
-            verticalAlign="top"
-            iconType="square"
-            wrapperStyle={{
-              lineHeight: "40px",
-              fontSize: "14px",
-            }}
-            legend={true}
-          />
-        </DataCard>
+          <CardHeader>
+            <CardTitle className="text-4xl">
+              <NumberFlow
+                value={totalAssert}
+                format={{
+                  style: "currency",
+                  currency: "CNY",
+                }}
+                plugins={[continuous]}
+              />
+            </CardTitle>
+            <CardAction>
+              <Badge variant="outline">{11}</Badge>
+            </CardAction>
+            <CardDescription>Current Asset</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <DataPieChart
+              url="http://localhost:3001/api/total"
+              colors={colors}
+              innerRadius={10}
+              outerRadius={100}
+              cx={200}
+              cy={120}
+              gradientOffset={1.4}
+              layout="vertical"
+              align="left"
+              verticalAlign="top"
+              iconType="square"
+              wrapperStyle={{
+                lineHeight: "40px",
+                fontSize: "14px",
+              }}
+              legend={true}
+            />
+          </CardContent>
+        </Card>
         <div className="data-card">
           <AppToolbar />
         </div>
         <Example />
       </div>
-
-      <DataLineChart />
-
+      <DataLineChart
+        url="http://localhost:3001/api/cash"
+        title="Total Assert"
+      />
       <DataCard title="Summary of Investment">
-        <DataTableChart tableType="investment" />
+        <DataTableChart tableType="cash" />
       </DataCard>
     </div>
   );

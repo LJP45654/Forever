@@ -1,6 +1,7 @@
-const { query } = require('../utils/db.js');
+import { query } from '../utils/db.js';
 
-async function getAllCashRecords(req, res) {
+// 获取所有现金记录
+export async function getAllCashRecords(req, res) {
   try {
     const cashRecords = await query(`
   SELECT 
@@ -16,6 +17,7 @@ async function getAllCashRecords(req, res) {
     console.error('Error fetching cash records:', error);
     res.status(500).json({ error: 'Database query failed' });
   }
+<<<<<<< HEAD
 }
 
 async function getBalanceSnapshot(req, res) {
@@ -208,4 +210,6 @@ module.exports = {
   getCashTimeSeries,
   getAllCashTimeSeries,
   updateCashRecords
+=======
+>>>>>>> origin/frontend
 }

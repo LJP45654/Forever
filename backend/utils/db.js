@@ -1,5 +1,5 @@
-const mysql = require('mysql2');
-const dbConfig = require('../config/db.js');
+import mysql from 'mysql2';
+import dbConfig from '../config/db.js';
 
 
 const connection = mysql.createConnection(dbConfig);
@@ -13,7 +13,7 @@ connection.connect(error => {
 });
 
 
-function query(sql, params) {
+export function query(sql, params) {
   return new Promise((resolve, reject) => {
     connection.query(sql, params, (error, results) => {
       if (error) {
@@ -26,4 +26,4 @@ function query(sql, params) {
   });
 }
 
-module.exports = { connection, query };
+export default connection;

@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "description": "backend",
   "main": "index.js",
-  "type": "commonjs",
   "scripts": {
     "test": "jest",
     "start": "node index.js"
@@ -11,6 +10,7 @@
   "author": "spencer",
   "license": "ISC",
   "dependencies": {
+<<<<<<< HEAD
     "axios": "^1.11.0",
     "cors": "^2.8.5",
     "dotenv": "^17.2.1",
@@ -19,5 +19,10 @@
     "mysql2": "^3.14.2",
     "node-cron": "^4.2.1",
     "supertest": "^7.1.4"
+=======
+    "dotenv": "^17.2.1",
+    "express": "^5.1.0",
+    "mysql2": "^3.14.2"
+>>>>>>> origin/frontend
   }
 }

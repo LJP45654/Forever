@@ -2,5 +2,9 @@
 .vscode
 .gitignore
 UIDesign
-frontend\Forever\node_modules
-frontend\Forever\package-lock.json
+frontend/Forever/node_modules
+frontend/Forever/mock-server
+frontend/Forever/package-lock.json
+.gitignore
+frontend/Forever/package-lock.json
+frontend/Forever/package.json
