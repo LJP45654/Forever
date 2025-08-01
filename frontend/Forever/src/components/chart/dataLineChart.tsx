@@ -1,166 +1,281 @@
-import { Area, AreaChart, CartesianGrid, XAxis } from "recharts";
+import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from "recharts";
 import {
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
   type ChartConfig,
 } from "../ui/chart";
+import React from "react";
+import {
+  Card,
+  CardAction,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "../ui/card";
+import { ToggleGroup, ToggleGroupItem } from "../ui/toggle-group";
+import { Select, SelectContent, SelectItem, SelectValue } from "../ui/select";
+import { SelectTrigger } from "@radix-ui/react-select";
+import { useQuery } from "@tanstack/react-query";
 
-const chartData = [
-  { date: "2024-04-01", desktop: 222, mobile: 150 },
-  { date: "2024-04-02", desktop: 97, mobile: 180 },
-  { date: "2024-04-03", desktop: 167, mobile: 120 },
-  { date: "2024-04-04", desktop: 242, mobile: 260 },
-  { date: "2024-04-05", desktop: 373, mobile: 290 },
-  { date: "2024-04-06", desktop: 301, mobile: 340 },
-  { date: "2024-04-07", desktop: 245, mobile: 180 },
-  { date: "2024-04-08", desktop: 409, mobile: 320 },
-  { date: "2024-04-09", desktop: 59, mobile: 110 },
-  { date: "2024-04-10", desktop: 261, mobile: 190 },
-  { date: "2024-04-11", desktop: 327, mobile: 350 },
-  { date: "2024-04-12", desktop: 292, mobile: 210 },
-  { date: "2024-04-13", desktop: 342, mobile: 380 },
-  { date: "2024-04-14", desktop: 137, mobile: 220 },
-  { date: "2024-04-15", desktop: 120, mobile: 170 },
-  { date: "2024-04-16", desktop: 138, mobile: 190 },
-  { date: "2024-04-17", desktop: 446, mobile: 360 },
-  { date: "2024-04-18", desktop: 364, mobile: 410 },
-  { date: "2024-04-19", desktop: 243, mobile: 180 },
-  { date: "2024-04-20", desktop: 89, mobile: 150 },
-  { date: "2024-04-21", desktop: 137, mobile: 200 },
-  { date: "2024-04-22", desktop: 224, mobile: 170 },
-  { date: "2024-04-23", desktop: 138, mobile: 230 },
-  { date: "2024-04-24", desktop: 387, mobile: 290 },
-  { date: "2024-04-25", desktop: 215, mobile: 250 },
-  { date: "2024-04-26", desktop: 75, mobile: 130 },
-  { date: "2024-04-27", desktop: 383, mobile: 420 },
-  { date: "2024-04-28", desktop: 122, mobile: 180 },
-  { date: "2024-04-29", desktop: 315, mobile: 240 },
-  { date: "2024-04-30", desktop: 454, mobile: 380 },
-  { date: "2024-05-01", desktop: 165, mobile: 220 },
-  { date: "2024-05-02", desktop: 293, mobile: 310 },
-  { date: "2024-05-03", desktop: 247, mobile: 190 },
-  { date: "2024-05-04", desktop: 385, mobile: 420 },
-  { date: "2024-05-05", desktop: 481, mobile: 390 },
-  { date: "2024-05-06", desktop: 498, mobile: 520 },
-  { date: "2024-05-07", desktop: 388, mobile: 300 },
-  { date: "2024-05-08", desktop: 149, mobile: 210 },
-  { date: "2024-05-09", desktop: 227, mobile: 180 },
-  { date: "2024-05-10", desktop: 293, mobile: 330 },
-  { date: "2024-05-11", desktop: 335, mobile: 270 },
-  { date: "2024-05-12", desktop: 197, mobile: 240 },
-  { date: "2024-05-13", desktop: 197, mobile: 160 },
-  { date: "2024-05-14", desktop: 448, mobile: 490 },
-  { date: "2024-05-15", desktop: 473, mobile: 380 },
-  { date: "2024-05-16", desktop: 338, mobile: 400 },
-  { date: "2024-05-17", desktop: 499, mobile: 420 },
-  { date: "2024-05-18", desktop: 315, mobile: 350 },
-  { date: "2024-05-19", desktop: 235, mobile: 180 },
-  { date: "2024-05-20", desktop: 177, mobile: 230 },
-  { date: "2024-05-21", desktop: 82, mobile: 140 },
-  { date: "2024-05-22", desktop: 81, mobile: 120 },
-  { date: "2024-05-23", desktop: 252, mobile: 290 },
-  { date: "2024-05-24", desktop: 294, mobile: 220 },
-  { date: "2024-05-25", desktop: 201, mobile: 250 },
-  { date: "2024-05-26", desktop: 213, mobile: 170 },
-  { date: "2024-05-27", desktop: 420, mobile: 460 },
-  { date: "2024-05-28", desktop: 233, mobile: 190 },
-  { date: "2024-05-29", desktop: 78, mobile: 130 },
-  { date: "2024-05-30", desktop: 340, mobile: 280 },
-  { date: "2024-05-31", desktop: 178, mobile: 230 },
-  { date: "2024-06-01", desktop: 178, mobile: 200 },
-  { date: "2024-06-02", desktop: 470, mobile: 410 },
-  { date: "2024-06-03", desktop: 103, mobile: 160 },
-  { date: "2024-06-04", desktop: 439, mobile: 380 },
-  { date: "2024-06-05", desktop: 88, mobile: 140 },
-  { date: "2024-06-06", desktop: 294, mobile: 250 },
-  { date: "2024-06-07", desktop: 323, mobile: 370 },
-  { date: "2024-06-08", desktop: 385, mobile: 320 },
-  { date: "2024-06-09", desktop: 438, mobile: 480 },
-  { date: "2024-06-10", desktop: 155, mobile: 200 },
-  { date: "2024-06-11", desktop: 92, mobile: 150 },
-  { date: "2024-06-12", desktop: 492, mobile: 420 },
-  { date: "2024-06-13", desktop: 81, mobile: 130 },
-  { date: "2024-06-14", desktop: 426, mobile: 380 },
-  { date: "2024-06-15", desktop: 307, mobile: 350 },
-  { date: "2024-06-16", desktop: 371, mobile: 310 },
-  { date: "2024-06-17", desktop: 475, mobile: 520 },
-  { date: "2024-06-18", desktop: 107, mobile: 170 },
-  { date: "2024-06-19", desktop: 341, mobile: 290 },
-  { date: "2024-06-20", desktop: 408, mobile: 450 },
-  { date: "2024-06-21", desktop: 169, mobile: 210 },
-  { date: "2024-06-22", desktop: 317, mobile: 270 },
-  { date: "2024-06-23", desktop: 480, mobile: 530 },
-  { date: "2024-06-24", desktop: 132, mobile: 180 },
-  { date: "2024-06-25", desktop: 141, mobile: 190 },
-  { date: "2024-06-26", desktop: 434, mobile: 380 },
-  { date: "2024-06-27", desktop: 448, mobile: 490 },
-  { date: "2024-06-28", desktop: 149, mobile: 200 },
-  { date: "2024-06-29", desktop: 103, mobile: 160 },
-  { date: "2024-06-30", desktop: 446, mobile: 400 },
-];
-const chartConfig = {
-  desktop: {
-    label: "Desktop",
-    color: "var(--primary)",
-  },
-  mobile: {
-    label: "Mobile",
-    color: "var(--primary)",
-  },
-} satisfies ChartConfig;
+const chartConfig = {} satisfies ChartConfig;
 
-function DataLineChart() {
+export function DataLineChart(props: {url: string, title: string}) {
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ["data"],
+    queryFn: async () => {
+      const response = await fetch(props.url);
+      if (!response.ok) {
+        throw new Error("Failed to fetch assets");
+      }
+      return response.json();
+    },
+  });
+
+  const [timeRange, setTimeRange] = React.useState("90d");
+  
+  // 数据加载中时显示加载状态
+  if (isLoading) {
+    return (
+      <Card className="@container/card from-primary/2 to-card bg-gradient-to-t">
+        <CardHeader>
+          <CardTitle>{props.title}</CardTitle>
+          <CardDescription>Loading chart data...</CardDescription>
+        </CardHeader>
+        <CardContent className="px-2 pt-4 sm:px-6 sm:pt-6">
+          <div className="flex items-center justify-center h-[250px]">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+            <span className="ml-2 text-muted-foreground">Loading...</span>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  // 数据加载失败时显示错误状态
+  if (isError) {
+    return (
+      <Card className="@container/card from-primary/2 to-card bg-gradient-to-t">
+        <CardHeader>
+          <CardTitle>{props.title}</CardTitle>
+          <CardDescription>Failed to load data</CardDescription>
+        </CardHeader>
+        <CardContent className="px-2 pt-4 sm:px-6 sm:pt-6">
+          <div className="flex items-center justify-center h-[250px]">
+            <div className="text-destructive">Failed to load chart data</div>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  // 数据为空时显示空状态
+  if (!data || data.length === 0) {
+    return (
+      <Card className="@container/card from-primary/2 to-card bg-gradient-to-t">
+        <CardHeader>
+          <CardTitle>{props.title}</CardTitle>
+          <CardDescription>No data available</CardDescription>
+        </CardHeader>
+        <CardContent className="px-2 pt-4 sm:px-6 sm:pt-6">
+          <div className="flex items-center justify-center h-[250px]">
+            <div className="text-muted-foreground">No data available</div>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  const filteredData = data.filter((item: any) => {
+    const date = new Date(item.date);
+    const referenceDate = new Date("2025-07-30");
+    let daysToSubtract = 90;
+    if (timeRange === "30d") {
+      daysToSubtract = 30;
+    } else if (timeRange === "7d") {
+      daysToSubtract = 7;
+    }
+    const startDate = new Date(referenceDate);
+    startDate.setDate(startDate.getDate() - daysToSubtract);
+    return date >= startDate;
+  });
+
   return (
-    <ChartContainer
-      config={chartConfig}
-      className="aspect-auto h-[250px] w-full"
-    >
-      <AreaChart
-        accessibilityLayer
-        data={chartData}
-        margin={{
-          left: 0,
-          right: 10,
-        }}
-      >
-        <CartesianGrid vertical={false} />
-        <defs>
-          <linearGradient id="temp" x1="0" y1="0" x2="0" y2="1">
-            <stop
-              offset="5%"
-              stopColor="var(--color-desktop)"
-              stopOpacity={1.0}
+    <Card className="@container/card from-primary/2 to-card bg-gradient-to-t">
+      <CardHeader>
+        <CardTitle>{props.title}</CardTitle>
+        <CardDescription>
+          <span className="hidden @[540px]/card:block">
+            {`Data for the last ${
+              timeRange == "90d"
+                ? "3 months"
+                : timeRange == "30d"
+                ? "30 days"
+                : "7 days"
+            }`}
+          </span>
+        </CardDescription>
+        <CardAction>
+          <ToggleGroup
+            type="single"
+            value={timeRange}
+            onValueChange={setTimeRange}
+            variant="outline"
+            className="hidden *:data-[slot=toggle-group-item]:!px-4 @[767px]/card:flex"
+          >
+            <ToggleGroupItem value="90d">Last 3 months</ToggleGroupItem>
+            <ToggleGroupItem value="30d">Last 30 days</ToggleGroupItem>
+            <ToggleGroupItem value="7d">Last 7 days</ToggleGroupItem>
+          </ToggleGroup>
+          <Select value={timeRange} onValueChange={setTimeRange}>
+            <SelectTrigger
+              className="flex w-40 **:data-[slot=select-value]:block **:data-[slot=select-value]:truncate @[767px]/card:hidden"
+              aria-label="Select a value"
+            >
+              <SelectValue placeholder="Last 3 months" />
+            </SelectTrigger>
+            <SelectContent className="rounded-xl">
+              <SelectItem value="90d" className="rounded-lg">
+                Last 3 months
+              </SelectItem>
+              <SelectItem value="30d" className="rounded-lg">
+                Last 30 days
+              </SelectItem>
+              <SelectItem value="7d" className="rounded-lg">
+                Last 7 days
+              </SelectItem>
+            </SelectContent>
+          </Select>
+        </CardAction>
+      </CardHeader>
+      <CardContent className="px-2 pt-4 sm:px-6 sm:pt-6">
+        <ChartContainer
+          config={chartConfig}
+          className="aspect-auto h-[250px] w-full"
+        >
+          <AreaChart
+            data={filteredData}
+            accessibilityLayer
+            margin={{
+              top: 20,
+              right: 20,
+              bottom: 20,
+              left: 20,
+            }}
+          >
+            <defs>
+              <linearGradient id="line-fill" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%" stopColor="#ff6467" />
+                <stop offset="20%" stopColor="#ff8904" />
+                <stop offset="40%" stopColor="#fdc700" />
+                <stop offset="60%" stopColor="#9ae600" />
+                <stop offset="80%" stopColor="#00d492" />
+                <stop offset="100%" stopColor="#00d3f3" />
+              </linearGradient>
+            </defs>
+            <defs>
+              {(() => {
+                const colors = [
+                  "#ff6467",
+                  "#ff8904",
+                  "#fdc700",
+                  "#9ae600",
+                  "#00d492",
+                  "#00d3f3",
+                ];
+                return (
+                  <>
+                    {colors.map((color, index) => (
+                      <radialGradient
+                        key={`fadeCircleGradient${index + 1}`}
+                        id={`fadeCircleGradient${index + 1}`}
+                        cx="50%"
+                        cy="60%"
+                        r="50%"
+                        fx="50%"
+                        fy="50%"
+                      >
+                        <stop offset="0%" stopColor={color} stopOpacity={0.5} />
+                        <stop
+                          offset="100%"
+                          stopColor="#ffffff"
+                          stopOpacity={0}
+                        />
+                      </radialGradient>
+                    ))}
+                    <pattern
+                      id="overlappingCirclesPattern"
+                      x="0"
+                      y="0"
+                      width="100%"
+                      height="100%"
+                      patternUnits="userSpaceOnUse"
+                    >
+                      {colors.map((_, index) => (
+                        <circle
+                          key={index}
+                          cx={index === 0 ? "0" : `${index * 20}%`}
+                          cy="50"
+                          r="25%"
+                          fill={`url(#fadeCircleGradient${index + 1})`}
+                        />
+                      ))}
+                    </pattern>
+                  </>
+                );
+              })()}
+            </defs>
+            <CartesianGrid vertical={false} />
+            <XAxis
+              dataKey="date"
+              tickLine={false}
+              axisLine={false}
+              tickMargin={8}
+              minTickGap={32}
+              tickFormatter={(value) => {
+                const date = new Date(value);
+                return date.toLocaleDateString("en-US", {
+                  year: "2-digit",
+                  month: "short",
+                  day: "numeric",
+                });
+              }}
             />
-            <stop
-              offset="95%"
-              stopColor="var(--color-desktop)"
-              stopOpacity={0.1}
+            <YAxis hide type="number" domain={[-1200,3790]}/>
+            <ChartTooltip
+              cursor={true}
+              content={
+                <ChartTooltipContent
+                  labelFormatter={(value) => {
+                    return new Date(value).toLocaleDateString("en-US", {
+                      year: "numeric",
+                      month: "short",
+                      day: "numeric",
+                    });
+                  }}
+                  indicator="line"
+                />
+              }
             />
-          </linearGradient>
-        </defs>
-        <XAxis
-          dataKey="month"
-          tickLine={false}
-          axisLine={false}
-          tickMargin={8}
-          tickFormatter={(value) => value.slice(0, 3)}
-          hide
-        />
-        <ChartTooltip
-          cursor={false}
-          content={<ChartTooltipContent indicator="dot" />}
-        />
-        <Area
-          dataKey="desktop"
-          type="natural"
-          fill="url(#temp)"
-          fillOpacity={0.4}
-          stroke="#333"
-          stackId="a"
-        />
-      </AreaChart>
-    </ChartContainer>
+            <Area
+              dataKey="amount"
+              type="natural"
+              fill="url(#overlappingCirclesPattern)"
+              stroke="url(#line-fill)"
+              strokeWidth={4}
+              strokeLinecap="round"
+              dot={false}
+              activeDot={{
+                fill: "#f5f5f5",
+                stroke: "#000000",
+                strokeWidth: 1,
+              }}
+            />
+          </AreaChart>
+        </ChartContainer>
+      </CardContent>
+    </Card>
   );
 }
 
