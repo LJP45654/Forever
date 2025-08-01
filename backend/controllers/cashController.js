@@ -60,13 +60,13 @@ async function updateBalanceSnapshot() {
 
     await query('DELETE FROM cash_snapshot');
 
-    for (const { currency, balance } of balanceResult) {
+    for (const { currency, amount } of balanceResult) {
       await query(
         `INSERT INTO cash_snapshot (currency, balance)
          VALUES (?, ?)
          ON DUPLICATE KEY UPDATE
          balance = VALUES(balance), timestamp = CURRENT_TIMESTAMP`,
-        [currency, balance]
+        [currency, amount]
       );
     }
 
