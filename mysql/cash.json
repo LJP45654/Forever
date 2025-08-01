@@ -1,128 +1,212 @@
 [
   {
-    "id": 1,
-    "timestamp": "2025-07-26",
-    "currency": "CNY",
-    "delta_amount": 1200.0,
-    "note": "工资收入"
-  },
-  {
-    "id": 2,
-    "timestamp": "2025-07-27",
-    "currency": "USD",
-    "delta_amount": -50.0,
-    "note": "Netflix订阅"
-  },
-  {
-    "id": 3,
-    "timestamp": "2025-07-28",
-    "currency": "JPY",
-    "delta_amount": 10000.0,
-    "note": "换汇日元"
-  },
-  {
-    "id": 4,
-    "timestamp": "2025-07-30",
-    "currency": "EUR",
-    "delta_amount": -120.0,
-    "note": "购买电子书"
-  },
-  {
-    "id": 5,
-    "timestamp": "2025-08-01",
-    "currency": "CNY",
-    "delta_amount": -300.0,
-    "note": "超市购物"
-  },
-  {
-    "id": 6,
-    "timestamp": "2025-08-02",
-    "currency": "USD",
-    "delta_amount": 500.0,
-    "note": "美元收入"
-  },
-  {
-    "id": 7,
-    "timestamp": "2025-08-03",
-    "currency": "JPY",
-    "delta_amount": -8000.0,
-    "note": "日元支出"
-  },
-  {
-    "id": 8,
-    "timestamp": "2025-08-05",
-    "currency": "CNY",
-    "delta_amount": 600.0,
-    "note": "兼职工资"
-  },
-  {
-    "id": 9,
-    "timestamp": "2025-08-07",
-    "currency": "EUR",
-    "delta_amount": 200.0,
-    "note": "欧元转入"
-  },
-  {
-    "id": 10,
-    "timestamp": "2025-08-08",
-    "currency": "CNY",
-    "delta_amount": -100.0,
-    "note": "水电费"
-  },
-  {
-    "id": 11,
-    "timestamp": "2025-08-10",
-    "currency": "USD",
-    "delta_amount": -75.0,
-    "note": "App订阅"
-  },
-  {
-    "id": 12,
-    "timestamp": "2025-08-12",
-    "currency": "CNY",
-    "delta_amount": -250.0,
-    "note": "外卖"
-  },
-  {
-    "id": 13,
-    "timestamp": "2025-08-13",
-    "currency": "JPY",
-    "delta_amount": 5000.0,
-    "note": "日元退款"
-  },
-  {
-    "id": 14,
-    "timestamp": "2025-08-14",
-    "currency": "EUR",
-    "delta_amount": -10.0,
-    "note": "旅行预订"
-  },
-  {
-    "id": 15,
-    "timestamp": "2025-08-15",
-    "currency": "USD",
-    "delta_amount": 100.0,
-    "note": "PayPal 收款"
-  },
-  {
-    "id": 16,
-    "timestamp": "2025-07-29",
-    "currency": "USD",
-    "delta_amount": 100.5,
-    "note": "Initial deposit"
-  },
-  {
-    "id": 20,
-    "timestamp": "2025-07-29",
-    "currency": "USD",
-    "delta_amount": -50.0,
-    "note": "pay"
-  },
-  {
     "id": 21,
-    "timestamp": "2025-07-29",
-    "currency": "EUR",
-    "delta_amount": 200.0,
-    "note": null
+    "timestamp": "2025-03-01 10:00:00",
+    "currency": "CNY",
+    "amount": 1000.0,
+    "note": "初始余额"
+  },
+  {
+    "id": 22,
+    "timestamp": "2025-03-05 12:00:00",
+    "currency": "CNY",
+    "amount": 1200.0,
+    "note": "工资 +200"
+  },
+  {
+    "id": 23,
+    "timestamp": "2025-03-10 09:30:00",
+    "currency": "CNY",
+    "amount": 1100.0,
+    "note": "支出 -100"
+  },
+  {
+    "id": 24,
+    "timestamp": "2025-03-15 15:00:00",
+    "currency": "CNY",
+    "amount": 1250.0,
+    "note": "转账收入 +150"
+  },
+  {
+    "id": 25,
+    "timestamp": "2025-03-20 14:00:00",
+    "currency": "CNY",
+    "amount": 1170.0,
+    "note": "购物 -80"
+  },
+  {
+    "id": 26,
+    "timestamp": "2025-03-25 18:00:00",
+    "currency": "CNY",
+    "amount": 1700.0,
+    "note": "奖金 +530"
+  },
+  {
+    "id": 27,
+    "timestamp": "2025-03-30 20:00:00",
+    "currency": "CNY",
+    "amount": 1650.0,
+    "note": "请客吃饭 -50"
+  },
+  {
+    "id": 28,
+    "timestamp": "2025-04-01 09:00:00",
+    "currency": "USD",
+    "amount": 300.0,
+    "note": "初始余额"
+  },
+  {
+    "id": 29,
+    "timestamp": "2025-04-05 13:00:00",
+    "currency": "USD",
+    "amount": 450.0,
+    "note": "收入 +150"
+  },
+  {
+    "id": 30,
+    "timestamp": "2025-04-10 17:00:00",
+    "currency": "USD",
+    "amount": 420.0,
+    "note": "订阅支出 -30"
+  },
+  {
+    "id": 31,
+    "timestamp": "2025-04-15 11:30:00",
+    "currency": "USD",
+    "amount": 620.0,
+    "note": "项目款 +200"
+  },
+  {
+    "id": 32,
+    "timestamp": "2025-04-20 16:30:00",
+    "currency": "USD",
+    "amount": 590.0,
+    "note": "餐费 -30"
+  },
+  {
+    "id": 33,
+    "timestamp": "2025-04-25 08:00:00",
+    "currency": "JPY",
+    "amount": 100000.0,
+    "note": "初始余额"
+  },
+  {
+    "id": 34,
+    "timestamp": "2025-04-28 14:00:00",
+    "currency": "JPY",
+    "amount": 98000.0,
+    "note": "车票 -2000"
+  },
+  {
+    "id": 35,
+    "timestamp": "2025-05-01 10:00:00",
+    "currency": "JPY",
+    "amount": 102000.0,
+    "note": "退款 +4000"
+  },
+  {
+    "id": 36,
+    "timestamp": "2025-05-05 13:00:00",
+    "currency": "JPY",
+    "amount": 101000.0,
+    "note": "咖啡 -1000"
+  },
+  {
+    "id": 37,
+    "timestamp": "2025-05-10 18:00:00",
+    "currency": "JPY",
+    "amount": 106000.0,
+    "note": "项目款 +5000"
+  },
+  {
+    "id": 38,
+    "timestamp": "2025-05-15 09:30:00",
+    "currency": "JPY",
+    "amount": 105000.0,
+    "note": "便利店 -1000"
+  },
+  {
+    "id": 39,
+    "timestamp": "2025-05-20 12:00:00",
+    "currency": "CNY",
+    "amount": 1800.0,
+    "note": "工资 +150"
+  },
+  {
+    "id": 40,
+    "timestamp": "2025-05-25 17:00:00",
+    "currency": "CNY",
+    "amount": 1700.0,
+    "note": "房租 -100"
+  },
+  {
+    "id": 41,
+    "timestamp": "2025-05-30 09:00:00",
+    "currency": "CNY",
+    "amount": 2100.0,
+    "note": "自由职业 +400"
+  },
+  {
+    "id": 42,
+    "timestamp": "2025-06-05 13:30:00",
+    "currency": "CNY",
+    "amount": 2050.0,
+    "note": "出差 -50"
+  },
+  {
+    "id": 43,
+    "timestamp": "2025-06-10 08:30:00",
+    "currency": "USD",
+    "amount": 650.0,
+    "note": "奖励 +60"
+  },
+  {
+    "id": 44,
+    "timestamp": "2025-06-15 14:00:00",
+    "currency": "USD",
+    "amount": 620.0,
+    "note": "平台扣费 -30"
+  },
+  {
+    "id": 45,
+    "timestamp": "2025-06-20 15:00:00",
+    "currency": "USD",
+    "amount": 670.0,
+    "note": "项目入账 +50"
+  },
+  {
+    "id": 46,
+    "timestamp": "2025-06-25 16:00:00",
+    "currency": "JPY",
+    "amount": 108000.0,
+    "note": "补贴 +3000"
+  },
+  {
+    "id": 47,
+    "timestamp": "2025-06-30 10:00:00",
+    "currency": "JPY",
+    "amount": 107000.0,
+    "note": "便利店 -1000"
+  },
+  {
+    "id": 48,
+    "timestamp": "2025-07-05 19:00:00",
+    "currency": "JPY",
+    "amount": 110000.0,
+    "note": "稿费 +3000"
+  },
+  {
+    "id": 49,
+    "timestamp": "2025-07-10 09:30:00",
+    "currency": "CNY",
+    "amount": 2000.0,
+    "note": "周转支出 -100"
+  },
+  {
+    "id": 50,
+    "timestamp": "2025-07-15 15:00:00",
+    "currency": "CNY",
+    "amount": 2600.0,
+    "note": "大额入账 +600"
   }
 ]

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 const Router = require('express');
 const { updateCashRecords, getAllCashRecords, getAllCashTimeSeries, getBalanceSnapshot, updateBalanceSnapshot, insertCashRecords, deleteCashRecords } = require('../controllers/cashController.js');
 const { getTickerNames, getTickerRecords, getAllStockTimeSeries, getStockTimeSeriesById, insertStockRecords, deleteStockRecordsById,updateStockRecords } = require('../controllers/stockController.js');
@@ -9,13 +10,17 @@ const { getAllFundRecord,deleteFundRecordById, updateFundRecordById, insertFundR
 const { getAllOtherRecords,addOtherRecord,updateOtherRecord,deleteOtherRecord } = require('../controllers/othersController.js')
 const { getAllBondRecords, updateBondRecord,addBondRecord,deleteBondRecord } = require('../controllers/bondController.js')
 
+=======
+import { Router } from 'express';
+import { getAllCashRecords } from '../controllers/cashController.js';
+>>>>>>> origin/frontend
 
 const router = Router();
 
-// Cash routes
+// 现金记录路由
 router.get('/cash', getAllCashRecords);
-router.get('/cash/currency', getBalanceSnapshot);
 
+<<<<<<< HEAD
 router.post('/cash/balance/snapshot', updateBalanceSnapshot);//测试用，前端不拿
 router.post('/cash/insert', insertCashRecords);
 router.delete('/cash/delete', deleteCashRecords);
@@ -66,3 +71,6 @@ router.post('/chat', chatBot);
 
 // export default router;
 module.exports = router;
+=======
+export default router;
+>>>>>>> origin/frontend

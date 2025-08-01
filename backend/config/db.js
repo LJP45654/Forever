@@ -1,6 +1,7 @@
-const config = require('dotenv').config();
+// config/db.js
+import 'dotenv/config';
 
-module.exports = {
+export default {
   host: process.env.DB_HOST,
   user: process.env.DB_USER,
   password: process.env.DB_PASS,
