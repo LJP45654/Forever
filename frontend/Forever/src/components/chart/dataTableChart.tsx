@@ -7,16 +7,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-
-//import exampleDatahomepage from "@/test/json/investment.json";
-//import example_cash from "@/test/json/example_cash.ts";
 import { useEffect, useState } from "react";
-
-
-// fetch('https://jsonplaceholder.typicode.com/todos/1')
-//       .then(response => response.json())
-//       .then(json => console.log(json))
-
 
 // 表头字典，所有表头写死
 const tableHeadersDictionary: Record<string, { header: string; type: string }[]> = {
@@ -29,9 +20,9 @@ const tableHeadersDictionary: Record<string, { header: string; type: string }[]>
   ],
   //cash的表格
   'cash': [
+    { header: "Date", type: "string" },
     { header: "Currency_Type", type: "string" },
     { header: "Amount", type: "number" },
-    { header: "Date", type: "string" },
     { header: "Note", type: "string" },
   ],
   //deposit的表格
@@ -44,7 +35,7 @@ const tableHeadersDictionary: Record<string, { header: string; type: string }[]>
     { header: "Expected_Interest", type: "number" },
   ],
   //bond的表格
-  'bond': [
+  'bonds': [
     { header: "Bond_Name", type: "string" },
     { header: "Currency_Type", type: "string" },
     { header: "Amount", type: "number" },
@@ -64,7 +55,7 @@ const tableHeadersDictionary: Record<string, { header: string; type: string }[]>
     { header: "Profit_loss", type: "number" },
   ],
   //fund的表格
-  'fund': [
+  'funds': [
     { header: "Fund_Name", type: "string" },
     { header: "Currency_Type", type: "string" },
     { header: "Units", type: "number" },
@@ -83,23 +74,72 @@ const tableHeadersDictionary: Record<string, { header: string; type: string }[]>
   ]
 };
 
-function DataTableChart(props: any) {
-  //console.log(tableHeadersDictionary);
-  const [data, setData] = useState<any>([]);
-  const [example_cash,setCashData]= useState<any>([]);
+// Define a more specific interface for props for better type checking
+interface DataTableChartProps {
+  tableType: string;
+  currencyFilter?: string; // New optional prop for currency filtering
+}
 
+function DataTableChart(props: DataTableChartProps) { // Use the new interface here
+  const [total_data, setData] = useState<any>([]);
+  const [cash_data, setCashData] = useState<any>([]);
+  const [deposit_data, setDepositData] = useState<any>([]);
+  const [bonds_data, setBondsData] = useState<any>([]);
+  const [stock_data, setStockData] = useState<any>([]);
+  const [funds_data, setFundsData] = useState<any>([]);
+  const [others_data, setOthersData] = useState<any>([]);
+
+  // Fetch homepage summary data once on component mount
   useEffect(() => {
-    const exampleDatahomepage = fetch('http://localhost:3002/summary')
+    fetch('http://localhost:3002/summary')
       .then(response => response.json())
       .then(json => setData(json));
   }, []);
+
+  // Fetch cash data once on component mount
   useEffect(() => {
     fetch('http://localhost:3002/cash')
       .then(response => response.json())
       .then(json => setCashData(json));
-  })
-  
-  // 从字典中选择表头，homepage单独出来（因为要计算百分比）
+  }, []); // Added empty dependency array
+
+  // Fetch deposit data once on component mount
+  useEffect(() => {
+    fetch('http://localhost:3002/deposit')
+      .then(response => response.json())
+      .then(json => setDepositData(json));
+  }, []); // Added empty dependency array
+
+  // Fetch bonds data once on component mount
+  useEffect(() => {
+    fetch('http://localhost:3002/bonds')
+      .then(response => response.json())
+      .then(json => setBondsData(json));
+  }, []); // Added empty dependency array
+
+  // Fetch stock data once on component mount
+  useEffect(() => {
+    fetch('http://localhost:3002/stock')
+      .then(response => response.json())
+      .then(json => setStockData(json));
+  }, []); // Added empty dependency array
+
+  // Fetch funds data once on component mount
+  useEffect(() => {
+    fetch('http://localhost:3002/funds')
+      .then(response => response.json())
+      .then(json => setFundsData(json));
+  }, []); // Added empty dependency array
+
+  // Fetch others data once on component mount
+  useEffect(() => {
+    fetch('http://localhost:3002/others')
+      .then(response => response.json())
+      .then(json => setOthersData(json));
+  }, []); // Added empty dependency array
+
+
+  // From the dictionary, select the table header; homepage is separate (because percentage needs to be calculated)
   if (props.tableType === 'investment') {
     return (
       <Table>
@@ -111,7 +151,7 @@ function DataTableChart(props: any) {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {Object.entries(data).map(([key, value]) => (
+          {Object.entries(total_data).map(([key, value]: [string, any]) => (
             <TableRow key={key}>
               <TableCell>{key}</TableCell>
               <TableCell>{value.amount}</TableCell>
@@ -121,8 +161,8 @@ function DataTableChart(props: any) {
               <TableCell>
                 {(
                   (parseFloat(value.amount) /
-                    Object.values(data).reduce(
-                      (sum, asset) => sum + parseFloat(asset.amount),
+                    Object.values(total_data).reduce(
+                      (sum, asset: any) => sum + parseFloat(asset.amount),
                       0
                     )) *
                   100
@@ -134,11 +174,30 @@ function DataTableChart(props: any) {
       </Table>
     );
   }
-  else if (props.tableType === 'cash' || props.tableType === 'deposit' || props.tableType === 'bond' || props.tableType === 'stock' || props.tableType === 'fund' || props.tableType === 'others') {
+  else if (['cash', 'deposit', 'bonds', 'stock', 'funds', 'others'].includes(props.tableType)) {
+
+    const dataDictionary: Record<string, any[]> = { // Specify type for dataDictionary
+      cash: cash_data,
+      deposit: deposit_data,
+      bonds: bonds_data, // Corrected 'bond' to 'bonds' to match state variable
+      stock: stock_data,
+      funds: funds_data,
+      others: others_data,
+    };
+
+    let currentTableData = dataDictionary[props.tableType] || [];
+    console.log("Current Table Data:", props);
+    // Apply filtering if tableType is 'cash' and currencyFilter is provided
+    if (props.tableType === 'cash' && props.currencyFilter) {
+      currentTableData = currentTableData.filter(item =>
+        item.currency?.toLowerCase() === props.currencyFilter?.toLowerCase()
+      );
+    }
+
     return (
       <div
         style={{
-          maxHeight: `${350}px`, 
+          maxHeight: `${350}px`,
           overflowY: "auto",
         }}
       >
@@ -152,9 +211,10 @@ function DataTableChart(props: any) {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {example_cash.map((item, index) => (
+              {currentTableData.map((item, index) => (
                 <TableRow key={index}>
                   {Object.entries(item).map(([key, value]) =>
+                    // Only render table cells for keys that are not 'id'
                     key !== "id" && <TableCell key={key}>{value}</TableCell>
                   )}
                 </TableRow>

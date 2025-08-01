@@ -1,57 +1,22 @@
-import { CommandInput, Command } from "./ui/command";
-import DataDialog, { type LabelData } from "./dataDialog";
 import { ButtonGroup } from "./ui/button-group";
 import { Button } from "./ui/button";
 import { useState } from "react";
+import { HomeAddDialog } from "./dialog/addDialog";
+import AppSearchBar from "./appSearchBar";
+import DeleteDialog from "./dialog/deleteDialog";
+import UpdateDialog from "./dialog/updateDialog";
 
 const dialogSubmit = (values: any) => {
   console.log(values);
 };
 
-const labelDataDict: Record<string, LabelData[]> = {
-  Add: [
-    {
-      title: "Categories",
-      type: "tag",
-      disabled: false,
-    },
-    {
-      title: "Name",
-      type: "string",
-      disabled: false,
-    },
-  ],
-  Update: [
-    {
-      title: "Categories",
-      type: "tag",
-      disabled: false,
-    },
-    {
-      title: "Name",
-      type: "string",
-      disabled: false,
-    },
-  ],
-  Delete: [
-    {
-      title: "Categories",
-      type: "tag",
-      disabled: true,
-    },
-    {
-      title: "Name",
-      type: "string",
-      disabled: true,
-    },
-  ],
-};
-
 function AppToolbar() {
-  const [dialogOpen, setDialogOpen] = useState(false);
-  const [dialogTitle, setDialogTitle] = useState("add");
-  const toggleDialogOpen = (open?: boolean) => {
-    setDialogOpen(open !== undefined ? open : !dialogOpen);
+  const [addDialogOpen, setAddDialogOpen] = useState(false);
+  const [updateDialogOpen, setUpdateDialogOpen] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+
+  const handleSearchSelect = (value: string) => {
+    console.log("Selected search item:", value);
   };
 
   return (
@@ -59,17 +24,14 @@ function AppToolbar() {
       className="toolbar flex flex-row h-10"
       style={{ fontFamily: "Roboto" }}
     >
-      <Command className="rounded-lg border shadow-xs grow mr-6">
-        <CommandInput placeholder="Type a command or search..." />
-      </Command>
+      <div className="pr-6 grow">
+      <AppSearchBar onSelect={handleSearchSelect} />
+      </div>
       <ButtonGroup rounded="large">
         <Button
           variant="outline"
           className="h-10"
-          onClick={() => {
-            toggleDialogOpen();
-            setDialogTitle("Add");
-          }}
+          onClick={() => setAddDialogOpen(true)}
         >
           <i className="ri-add-circle-fill text-[16px]" />
           Add
@@ -77,10 +39,7 @@ function AppToolbar() {
         <Button
           variant="outline"
           className="h-10"
-          onClick={() => {
-            toggleDialogOpen();
-            setDialogTitle("Update");
-          }}
+          onClick={() => setUpdateDialogOpen(true)}
         >
           <i className="ri-edit-fill text-[16px]" />
           Update
@@ -88,32 +47,28 @@ function AppToolbar() {
         <Button
           variant="outline"
           className="h-10"
-          onClick={() => {
-            toggleDialogOpen();
-            setDialogTitle("Delete");
-          }}
+          onClick={() => setDeleteDialogOpen(true)}
         >
           <i className="ri-delete-bin-fill text-[16px]" />
           Delete
         </Button>
       </ButtonGroup>
-      <DataDialog
-        title={dialogTitle}
-        labelDatas={labelDataDict[dialogTitle]}
+      <HomeAddDialog
+        open={addDialogOpen}
+        onOpenChange={() => setAddDialogOpen(false)}
         onSubmit={(values) => dialogSubmit(values)}
-        dialogOpen={dialogOpen}
-        toggleDialogOpen={toggleDialogOpen}
-        withSearch={dialogTitle != "Add"}
-        icon={
-          dialogTitle == "Add"
-            ? "ri-add-circle-fill"
-            : dialogTitle == "Update"
-            ? "ri-edit-fill"
-            : "ri-delete-bin-fill"
-        }
-        buttonDelete={
-          dialogTitle == 'Delete'
-        }
+      />
+      <UpdateDialog
+        title='Update'
+        open={updateDialogOpen}
+        onOpenChange={() => setUpdateDialogOpen(false)}
+        onUpdate={(values) => dialogSubmit(values)}
+      />
+      <DeleteDialog
+        title='Delete'
+        open={deleteDialogOpen}
+        onOpenChange={() => setDeleteDialogOpen(false)}
+        onDelete={(values) => dialogSubmit(values)}
       />
     </div>
   );
