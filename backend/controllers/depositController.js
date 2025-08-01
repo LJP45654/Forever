@@ -1,7 +1,7 @@
 const { query } = require('../utils/db.js');
 async function getDepositTimeSeries() {
   const sql = `
-    SELECT DATE_FORMAT(d.start_date, '%Y-%m-%d') AS date, d.principal AS amount, d.currency
+    SELECT DATE_FORMAT(d.start_date, '%Y-%m-%d') AS date, d.amount AS amount, d.currency
     FROM deposit d
     ORDER BY d.start_date ASC;
   `;
@@ -40,7 +40,7 @@ async function insertDepositRecord(req, res) {
 
     const sql = `
       INSERT INTO deposit 
-      (start_date, principal, currency, end_date, interest_rate, description)
+      (start_date, amount, currency, end_date, interest_rate, description)
       VALUES (?, ?, ?, ?, ?, ?)
     `;
 
@@ -122,7 +122,7 @@ async function updateDepositRecordById(req, res) {
       updateValues.push(start_date);
     }
     if (principal) {
-      updateFields.push('principal = ?');
+      updateFields.push('amount = ?');
       updateValues.push(principal);
     }
     if (currency) {
