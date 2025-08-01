@@ -10,7 +10,7 @@ async function getAllCashRecords(req, res) {
         id,
         DATE_FORMAT(timestamp, '%Y-%m-%d') AS timestamp,
         currency,
-        delta_amount,
+        amount,
         note
       FROM cash
       WHERE currency = ?
@@ -53,7 +53,7 @@ async function getBalanceSnapshot(req, res) {
 async function updateBalanceSnapshot() {
   try {
     const balanceResult = await query(`
-      SELECT currency, SUM(delta_amount) AS balance
+      SELECT currency, SUM(delta_amount) AS amount
       FROM cash
       GROUP BY currency
     `);

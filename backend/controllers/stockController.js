@@ -27,7 +27,7 @@ async function getTickerRecords(req, res) {
   quantity,
   ROUND(purchase_price, 2) AS purchase_price,
   ROUND(current_price, 2) AS current_price,
-  ROUND(profit_loss, 2) AS profit_loss,
+  ROUND(profit_loss, 2) AS amount,
   DATE_FORMAT(purchase_date, '%Y-%m-%d') AS purchase_date
 FROM stocks
   WHERE stock_name=?`
@@ -42,7 +42,7 @@ FROM stocks
   quantity,
   ROUND(purchase_price, 2) AS purchase_price,
   ROUND(current_price, 2) AS current_price,
-  ROUND(profit_loss, 2) AS profit_loss,
+  ROUND(profit_loss, 2) AS amount,
   DATE_FORMAT(purchase_date, '%Y-%m-%d') AS purchase_date
 FROM stocks;`
       const tickerRecords = await query(sql);
