@@ -14,7 +14,7 @@ async function getAssetSums() {
     const cash_sql = `SELECT ROUND(SUM(c.balance* er.rate_to_cny),2) as cash
                       FROM cash_snapshot c
                       JOIN exchange_rates er ON c.currency = er.currency_code;`;
-    const deposit_sql = `SELECT ROUND(SUM(c.principal* er.rate_to_cny),2) as deposit
+    const deposit_sql = `SELECT ROUND(SUM(c.amount* er.rate_to_cny),2) as deposit
                          FROM deposit c
                          JOIN exchange_rates er ON c.currency = er.currency_code;`;
     const funds_sql = `SELECT ROUND(SUM(f.units*f.current_price* er.rate_to_cny),2) as funds
