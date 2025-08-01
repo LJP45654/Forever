@@ -10,7 +10,7 @@ async function getAllCashRecords(req, res) {
         id,
         DATE_FORMAT(timestamp, '%Y-%m-%d') AS timestamp,
         currency,
-        amount,
+        delta_amount AS amount,
         note
       FROM cash
       WHERE currency = ?
@@ -22,7 +22,7 @@ async function getAllCashRecords(req, res) {
     id,
     DATE_FORMAT(timestamp, '%Y-%m-%d') AS timestamp,
     currency,
-    delta_amount,
+    delta_amount AS amount,
     note
   FROM cash
 `);
@@ -60,13 +60,13 @@ async function updateBalanceSnapshot() {
 
     await query('DELETE FROM cash_snapshot');
 
-    for (const { currency, balance } of balanceResult) {
+    for (const { currency, amount } of balanceResult) {
       await query(
         `INSERT INTO cash_snapshot (currency, balance)
          VALUES (?, ?)
          ON DUPLICATE KEY UPDATE
          balance = VALUES(balance), timestamp = CURRENT_TIMESTAMP`,
-        [currency, balance]
+        [currency, amount]
       );
     }
 
