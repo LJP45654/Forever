@@ -6,8 +6,8 @@ const { chatBot } = require('../controllers/aiController.js');
 const { deleteTickersByCode, updateTickersByCode } = require('../controllers/stockDataController.js')
 const { getAllDepositRecord, insertDepositRecord,deleteDepositRecordById,updateDepositRecordById, } = require('../controllers/depositController.js');
 const { getAllFundRecord,deleteFundRecordById, updateFundRecordById, insertFundRecord } = require('../controllers/fundController.js');
-const { getAllOtherRecords } = require('../controllers/othersController.js')
-const { getAllBondRecords } = require('../controllers/bondController.js')
+const { getAllOtherRecords,addOtherRecord,updateOtherRecord,deleteOtherRecord } = require('../controllers/othersController.js')
+const { getAllBondRecords, updateBondRecord,addBondRecord,deleteBondRecord } = require('../controllers/bondController.js')
 
 
 const router = Router();
@@ -47,9 +47,15 @@ router.post('/funds/update', updateFundRecordById);
 
 // others routes
 router.get('/others', getAllOtherRecords);
+router.post('/others/insert', addOtherRecord);
+router.delete('/others/delete', deleteOtherRecord);
+router.post('/others/update', updateOtherRecord);
 
 // bonds routes
 router.get('/bonds', getAllBondRecords);
+router.post('/bonds/insert', addBondRecord);
+router.delete('/bonds/delete', deleteBondRecord);
+router.post('/bonds/update', updateBondRecord);
 
 //总面板和搜索栏
 router.get('/summary', getSummaryData);
