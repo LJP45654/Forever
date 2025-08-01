@@ -13,6 +13,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import AppSearchBar from "../appSearchBar";
 import typeKeysConfig from "@/config/typeKeys.json";
+import { ScrollArea } from "../ui/scroll-area";
 
 type DeleteDialogProps = {
   icon?: string;
@@ -59,24 +60,24 @@ function DeleteDialog({
     null
   );
   const [selectedType, setSelectedType] = useState<TypeKey | null>(null);
-  const [searchResults, setSearchResults] = useState<any[]>([]);
 
   const resetDialog = () => {
     setSelectedData(null);
     setSelectedType(null);
-    setSearchResults([]);
   };
 
-  const handleSearchSelect = (value: string) => {
-    const result = searchResults.find(
-      (item, index) =>
-        `${item.type}-${index}` === value ||
-        Object.values(item).some((v) => String(v).includes(value))
-    );
+  const handleSearchSelect = (selectedItem: any) => {
+    console.log("Selected item:", selectedItem);
 
-    if (result) {
-      setSelectedData(result);
-      setSelectedType(result.type as TypeKey);
+    // 如果传入的是字符串，说明是旧的格式，直接返回
+    if (typeof selectedItem === "string") {
+      return;
+    }
+
+    // 如果传入的是完整的数据对象
+    if (selectedItem && selectedItem.parent) {
+      setSelectedData(selectedItem);
+      setSelectedType(selectedItem.parent as TypeKey);
     }
   };
 
@@ -111,7 +112,7 @@ function DeleteDialog({
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogContent className="sm:max-w-[500px] max-h-[80vh] overflow-y-auto">
+      <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2 text-red-500">
             {icon && <i className={`${icon} text-lg`} />}
@@ -120,26 +121,30 @@ function DeleteDialog({
           {description && <DialogDescription>{description}</DialogDescription>}
         </DialogHeader>
 
-        <div className="grid gap-4 py-4">
-          {/* 搜索栏 */}
-          <div className="grid gap-3">
-            <Label className="text-sm font-medium">Search Item</Label>
-            <AppSearchBar
-              placeholder="Search and select an item to delete..."
-              onSelect={handleSearchSelect}
-            />
-          </div>
-
-          {selectedData && selectedType && (
-            <>
-              <div className="border-t pt-4">
-                <Label className="text-sm font-medium text-gray-900 mb-3 block">
-                  Selected Item Details ({selectedType.toUpperCase()})
-                </Label>
+        <div className="grid mb-4">
+          <ScrollArea className="max-h-[60vh]">
+            <div className="grid gap-3 mb-6">
+              <Label className="text-sm font-medium">Search Item</Label>
+              <AppSearchBar
+                placeholder="Search and select an item to delete..."
+                onSelect={handleSearchSelect}
+              />
+            </div>
+            {selectedData && selectedType && (
+              <>
+                <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg">
+                  <p className="text-sm text-red-700 font-medium">
+                <i className="ri-alarm-warning-fill text-xl mr-1"/>
+                    Warning: This action cannot be undone
+                  </p>
+                  <p className="text-xs text-red-700 mt-1">
+                    You are about to delete a {selectedType.toUpperCase()} item.
+                  </p>
+                </div>
                 <div className="grid gap-4">{renderFormFields()}</div>
-              </div>
-            </>
-          )}
+              </>
+            )}
+          </ScrollArea>
         </div>
 
         <DialogFooter>

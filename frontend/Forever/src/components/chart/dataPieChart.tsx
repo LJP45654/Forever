@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Cell,
   Legend,
@@ -8,17 +8,13 @@ import {
   type SectorProps,
 } from "recharts";
 import { ChartContainer, type ChartConfig } from "../ui/chart";
+import { useQuery } from "@tanstack/react-query";
 
-interface PieChartData {
-  name: string;
-  value: number;
-  [key: string]: any;
-}
 interface PieChartProps {
+  url: string;
   cx?: number;
   cy?: number;
   colors?: string[];
-  data: PieChartData[];
   innerRadius?: number;
   outerRadius?: number;
   gradientOffset?: number;
@@ -215,9 +211,9 @@ const renderInactiveShape = (props: PieSectorDataItem) => {
 };
 
 function DataPieChart({
+  url,
   cx,
   cy,
-  data,
   colors,
   innerRadius = 60,
   outerRadius = 120,
@@ -231,14 +227,62 @@ function DataPieChart({
 }: PieChartProps) {
   const [activeIndex, setActiveIndex] = useState(0);
 
+  //@ts-ignore
   const createShapeRenderer = (isActive: boolean) => (shapeProps: any) => {
     const renderer = isActive ? renderActiveShape : renderInactiveShape;
     return renderer({ ...shapeProps, gradientOffset });
   };
 
-  const chartConfig = {
-  } satisfies ChartConfig;
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ["data", url],
+    queryFn: async () => {
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error("Failed to fetch assets");
+      }
+      return response.json();
+    },
+  });
 
+  const chartConfig = {} satisfies ChartConfig;
+
+  // 数据加载中时显示加载状态
+  if (isLoading) {
+    return (
+      <ChartContainer config={chartConfig}>
+        <div className="flex items-center justify-center h-64">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+          <span className="ml-2 text-muted-foreground">
+            Loading...
+          </span>
+        </div>
+      </ChartContainer>
+    );
+  }
+
+  // 数据加载失败时显示错误状态
+  if (isError) {
+    return (
+      <ChartContainer config={chartConfig}>
+        <div className="flex items-center justify-center h-64">
+          <div className="text-destructive">Failed to load chart data</div>
+        </div>
+      </ChartContainer>
+    );
+  }
+
+  // 数据为空时显示空状态
+  if (!data || data.length === 0) {
+    return (
+      <ChartContainer config={chartConfig}>
+        <div className="flex items-center justify-center h-64">
+          <div className="text-muted-foreground">No data available</div>
+        </div>
+      </ChartContainer>
+    );
+  }
+
+  // 数据加载完成后渲染图表
   return (
     <ChartContainer config={chartConfig}>
       <PieChart>
@@ -256,7 +300,7 @@ function DataPieChart({
           onMouseEnter={(_, index) => setActiveIndex(index)}
         >
           {colors &&
-            data.map((entry, index) => (
+            data.map((entry: any, index: any) => (
               <Cell
                 key={`cell-${entry.name}`}
                 fill={colors[index % colors.length]}

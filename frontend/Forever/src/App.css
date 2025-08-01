@@ -45,7 +45,7 @@
 #home .data-card:nth-child(3) {
   grid-area: 2/2/3/3;
 }
-#home > div.grid.gap-6 > div:nth-child(2) > div > div.bg-popover.text-popover-foreground.flex.h-full.w-full.flex-col.overflow-hidden.rounded-lg.border.shadow-xs.grow > div {
+#home > div.grid.gap-6 > div:nth-child(2) > div > div.pr-6.grow > div > div > div {
   height: 40px;
 }
 #home > div.grid.gap-6 > div:nth-child(2) > div > div.button-group.flex.h-10 > form:nth-child(1) > button {
@@ -59,4 +59,7 @@
 }
 [data-slot="command-input-wrapper"] {
   border: none;
+}
+[role="dialog"] {
+  font-family: "Roboto";
 }

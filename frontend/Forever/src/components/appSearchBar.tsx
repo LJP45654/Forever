@@ -20,6 +20,7 @@ const mockData = {
       id: 1,
       label: "股票投资 - 苹果公司",
       value: "AAPL-stock",
+      parent: "investment",
       Investment_Type: "股票",
       Amount: 50000,
       Total_Earnings: 8500,
@@ -29,6 +30,7 @@ const mockData = {
       id: 2,
       label: "基金投资 - 标普500指数",
       value: "SP500-fund",
+      parent: "investment",
       Investment_Type: "基金",
       Amount: 30000,
       Total_Earnings: 4200,
@@ -38,6 +40,7 @@ const mockData = {
       id: 3,
       label: "债券投资 - 国债",
       value: "treasury-bond",
+      parent: "investment",
       Investment_Type: "债券",
       Amount: 100000,
       Total_Earnings: 3500,
@@ -49,6 +52,7 @@ const mockData = {
       id: 4,
       label: "美元现金",
       value: "usd-cash",
+      parent: "cash",
       Currency_Type: "USD",
       Amount: 15000,
       Date: "2024-01-15",
@@ -58,6 +62,7 @@ const mockData = {
       id: 5,
       label: "人民币现金",
       value: "cny-cash",
+      parent: "cash",
       Currency_Type: "CNY",
       Amount: 50000,
       Date: "2024-02-01",
@@ -67,6 +72,7 @@ const mockData = {
       id: 6,
       label: "欧元现金",
       value: "eur-cash",
+      parent: "cash",
       Currency_Type: "EUR",
       Amount: 8000,
       Date: "2024-01-20",
@@ -78,6 +84,7 @@ const mockData = {
       id: 7,
       label: "定期存款 - 工商银行",
       value: "icbc-deposit",
+      parent: "deposit",
       Currency_Type: "CNY",
       Amount: 200000,
       Rate: 3.25,
@@ -89,6 +96,7 @@ const mockData = {
       id: 8,
       label: "美元定存 - 花旗银行",
       value: "citi-usd-deposit",
+      parent: "deposit",
       Currency_Type: "USD",
       Amount: 50000,
       Rate: 4.5,
@@ -100,6 +108,7 @@ const mockData = {
       id: 9,
       label: "港币定存 - 汇丰银行",
       value: "hsbc-hkd-deposit",
+      parent: "deposit",
       Currency_Type: "HKD",
       Amount: 100000,
       Rate: 3.8,
@@ -113,37 +122,40 @@ const mockData = {
       id: 10,
       label: "国债 - 10年期",
       value: "treasury-10y",
+      parent: "bond",
       Bond_Name: "中国国债2034",
       Currency_Type: "CNY",
       Amount: 100000,
       Rate: 3.2,
       Start_Date: "2024-01-10",
       End_Date: "2034-01-10",
-      Expected_Interest: 32000,
+      "Expected Interest": 32000,
     },
     {
       id: 11,
       label: "企业债 - 腾讯",
       value: "tencent-bond",
+      parent: "bond",
       Bond_Name: "腾讯企业债2029",
       Currency_Type: "CNY",
       Amount: 50000,
       Rate: 4.1,
       Start_Date: "2024-02-01",
       End_Date: "2029-02-01",
-      Expected_Interest: 10250,
+      "Expected Interest": 10250,
     },
     {
       id: 12,
       label: "美国国债",
       value: "us-treasury",
+      parent: "bond",
       Bond_Name: "US Treasury 2034",
       Currency_Type: "USD",
       Amount: 30000,
       Rate: 4.5,
       Start_Date: "2024-01-15",
       End_Date: "2034-01-15",
-      Expected_Interest: 13500,
+      "Expected Interest": 13500,
     },
   ],
   Stock: [
@@ -151,6 +163,7 @@ const mockData = {
       id: 13,
       label: "苹果股票",
       value: "aapl-stock",
+      parent: "stock",
       Stock_Name: "Apple Inc.",
       Currency_Type: "USD",
       Quantity: 100,
@@ -163,6 +176,7 @@ const mockData = {
       id: 14,
       label: "腾讯股票",
       value: "tencent-stock",
+      parent: "stock",
       Stock_Name: "腾讯控股",
       Currency_Type: "HKD",
       Quantity: 200,
@@ -175,6 +189,7 @@ const mockData = {
       id: 15,
       label: "茅台股票",
       value: "moutai-stock",
+      parent: "stock",
       Stock_Name: "贵州茅台",
       Currency_Type: "CNY",
       Quantity: 50,
@@ -189,6 +204,7 @@ const mockData = {
       id: 16,
       label: "沪深300指数基金",
       value: "hs300-fund",
+      parent: "fund",
       Fund_Name: "华夏沪深300ETF",
       Currency_Type: "CNY",
       Units: 10000,
@@ -201,6 +217,7 @@ const mockData = {
       id: 17,
       label: "纳斯达克基金",
       value: "nasdaq-fund",
+      parent: "fund",
       Fund_Name: "QQQ ETF",
       Currency_Type: "USD",
       Units: 500,
@@ -213,6 +230,7 @@ const mockData = {
       id: 18,
       label: "债券基金",
       value: "bond-fund",
+      parent: "fund",
       Fund_Name: "易方达纯债基金",
       Currency_Type: "CNY",
       Units: 20000,
@@ -227,8 +245,9 @@ const mockData = {
       id: 19,
       label: "黄金投资",
       value: "gold-investment",
+      parent: "others",
       Others_Name: "实物黄金",
-      Currency_Type: "CNY",
+      "Currency Type": "CNY",
       Purchase_price: 450.0,
       Purchase_date: "2024-01-12",
       Current_price: 480.0,
@@ -237,8 +256,9 @@ const mockData = {
       id: 20,
       label: "比特币",
       value: "bitcoin",
+      parent: "others",
       Others_Name: "Bitcoin",
-      Currency_Type: "USD",
+      "Currency Type": "USD",
       Purchase_price: 45000.0,
       Purchase_date: "2024-02-10",
       Current_price: 52000.0,
@@ -256,7 +276,10 @@ function AppSearchBar({
 
   const handleSelect = (value: string) => {
     if (onSelect) {
-      onSelect(value);
+      // 找到完整的数据对象并传递给父组件
+      const allItems = Object.values(mockData).flat();
+      const selectedItem = allItems.find(item => item.value === value);
+      onSelect(selectedItem || value);
     }
     setIsOpen(false);
   };
@@ -314,7 +337,7 @@ function AppSearchBar({
   }, [isOpen]);
 
   return (
-    <div className="grow mr-6" ref={containerRef}>
+    <div ref={containerRef}>
       <Popover open={isOpen}>
         <Command className="rounded-lg border shadow-xs">
           <PopoverAnchor>

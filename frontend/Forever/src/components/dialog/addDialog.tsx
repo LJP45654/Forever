@@ -58,11 +58,11 @@ const FormField = ({
       />
     ) : labelData.type === "currency" ? (
       <CurrencySelect
-        name="test-currency"
+        name="currency"
         value={value || ""}
         onValueChange={onChange}
         placeholder="Choose a currency"
-        currencies="custom"
+        currencies="all"
       />
     ) : (
       <Input
@@ -252,7 +252,7 @@ export function HomeAddDialog({
             value={value}
             onValueChange={handleValueChange}
             placeholder="Select currency"
-            currencies="custom"
+            currencies="all"
             valid={!hasError}
           />
         ) : (

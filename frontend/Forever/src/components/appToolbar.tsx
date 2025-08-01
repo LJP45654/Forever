@@ -24,7 +24,9 @@ function AppToolbar() {
       className="toolbar flex flex-row h-10"
       style={{ fontFamily: "Roboto" }}
     >
+      <div className="pr-6 grow">
       <AppSearchBar onSelect={handleSearchSelect} />
+      </div>
       <ButtonGroup rounded="large">
         <Button
           variant="outline"

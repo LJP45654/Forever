@@ -84,6 +84,7 @@ export const allCurrencies = [
   "XUG", // Uganda shilling (pre-1987)
   "XXX", // No currency
   "ZWL", // Zimbabwean dollar (no longer in active use)
+  "TWD",
 ];
 
 // Currencies to include in the dropdown
@@ -118,7 +119,6 @@ const CurrencySelect = React.forwardRef<HTMLButtonElement, CurrencySelectProps>(
       value,
       onValueChange,
       onCurrencySelect,
-      name,
       placeholder = "Select currency",
       currencies = "all",
       variant = "default",
@@ -285,7 +285,7 @@ const CurrencySelect = React.forwardRef<HTMLButtonElement, CurrencySelectProps>(
               placeholder="Search currency..."
             />
             <CommandList>
-              <div ref={scrollAreaRef} className="max-h-72 overflow-hidden">
+              <div ref={scrollAreaRef} className="max-h-72 overflow-y-auto">
                 <CommandEmpty>No currency found.</CommandEmpty>
                 <CommandGroup>
                   {filteredCurrencies.map((currency) => (

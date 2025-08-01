@@ -16,14 +16,6 @@ import {
 } from "../ui/card";
 import { useState } from "react";
 import { useEffect } from "react";
-const data = [
-  { name: "Cash", value: 400 },
-  { name: "Deposit", value: 300 },
-  { name: "Bonds", value: 300 },
-  { name: "Stock", value: 200 },
-  { name: "Fund", value: 200 },
-  { name: "others", value: 50 },
-];
 const colors = [
   "#ff6467",
   "#ff8904",
@@ -63,8 +55,8 @@ function Home() {
           </CardHeader>
           <CardContent>
             <DataPieChart
+              url="http://localhost:3001/api/total"
               colors={colors}
-              data={data}
               innerRadius={10}
               outerRadius={100}
               cx={200}
@@ -87,7 +79,10 @@ function Home() {
         </div>
         <DataCard title="Card 3"></DataCard>
       </div>
-      <DataLineChart />
+      <DataLineChart
+        url="http://localhost:3001/api/cash"
+        title="Total Assert"
+      />
       <DataCard title="Summary of Investment">
         <DataTableChart tableType="cash" />
       </DataCard>

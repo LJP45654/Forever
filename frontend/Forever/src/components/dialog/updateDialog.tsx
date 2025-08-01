@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -13,9 +13,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import AppSearchBar from "../appSearchBar";
 import DatePick from "../datePicker";
-import TagSelect from "../tagSelecter";
 import { CurrencySelect } from "../ui/currency-select";
 import typeKeysConfig from "@/config/typeKeys.json";
+import { ScrollArea } from "../ui/scroll-area";
 
 type UpdateDialogProps = {
   icon?: string;
@@ -23,7 +23,10 @@ type UpdateDialogProps = {
   description?: string;
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
-  onUpdate: (originalData: Record<string, any>, updatedData: Record<string, any>) => void;
+  onUpdate: (
+    originalData: Record<string, any>,
+    updatedData: Record<string, any>
+  ) => void;
   onSearch?: (query: string) => Promise<any[]>;
 };
 
@@ -55,10 +58,7 @@ const FormField = ({
       </Label>
 
       {field.header.toLowerCase().includes("date") ? (
-        <DatePick
-          value={value || ""}
-          onChange={onChange}
-        />
+        <DatePick value={value || ""} onChange={onChange} />
       ) : field.header.toLowerCase().includes("currency") ? (
         <CurrencySelect
           name={field.header}
@@ -102,39 +102,39 @@ function UpdateDialog({
   onOpenChange,
   onUpdate,
 }: UpdateDialogProps) {
-  const [originalData, setOriginalData] = useState<Record<string, any> | null>(null);
+  const [originalData, setOriginalData] = useState<Record<string, any> | null>(
+    null
+  );
   const [selectedType, setSelectedType] = useState<TypeKey | null>(null);
   const [formValues, setFormValues] = useState<Record<string, any>>({});
   const [errors, setErrors] = useState<Record<string, string>>({});
-  const [searchResults, setSearchResults] = useState<any[]>([]);
 
   const resetDialog = () => {
     setOriginalData(null);
     setSelectedType(null);
     setFormValues({});
     setErrors({});
-    setSearchResults([]);
   };
 
-  const handleSearchSelect = (value: string) => {
-    // 从搜索结果中找到对应的数据
-    console.log(value);
-    
-    const result = searchResults.find((item, index) => 
-      `${item.type}-${index}` === value || 
-      Object.values(item).some(v => String(v).includes(value))
-    );
-    
-    if (result) {
-      setOriginalData(result);
-      setSelectedType(result.type as TypeKey);
-      
+  const handleSearchSelect = (selectedItem: any) => {
+    console.log("Selected item:", selectedItem);
+
+    // 如果传入的是字符串，说明是旧的格式，直接返回
+    if (typeof selectedItem === "string") {
+      return;
+    }
+
+    // 如果传入的是完整的数据对象
+    if (selectedItem && selectedItem.parent) {
+      setOriginalData(selectedItem);
+      setSelectedType(selectedItem.parent as TypeKey);
+
       // 将搜索结果填入表单
       const initialValues: Record<string, any> = {};
-      const fields = typeKeysConfig[result.type as TypeKey];
+      const fields = typeKeysConfig[selectedItem.parent as TypeKey];
       if (fields) {
         fields.forEach((field) => {
-          initialValues[field.header] = result[field.header] || "";
+          initialValues[field.header] = selectedItem[field.header] || "";
         });
       }
       setFormValues(initialValues);
@@ -154,11 +154,14 @@ function UpdateDialog({
 
     const newErrors: Record<string, string> = {};
     const fields = typeKeysConfig[selectedType];
-    
+
     fields.forEach((field) => {
       const isRequired = !field.header.toLowerCase().includes("note");
       if (isRequired && !formValues[field.header]) {
-        newErrors[field.header] = `${field.header.replace(/_/g, " ")} is required`;
+        newErrors[field.header] = `${field.header.replace(
+          /_/g,
+          " "
+        )} is required`;
       }
     });
 
@@ -199,9 +202,9 @@ function UpdateDialog({
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogContent className="sm:max-w-[500px] max-h-[80vh] overflow-y-auto">
+      <DialogContent className="sm:max-w-[500px] p-4">
         <form onSubmit={handleSubmit}>
-          <DialogHeader>
+          <DialogHeader className="px-2 pt-2">
             <DialogTitle className="flex items-center gap-2 text-emerald-400">
               {icon && <i className={`${icon} text-lg`} />}
               {title}
@@ -211,29 +214,22 @@ function UpdateDialog({
             )}
           </DialogHeader>
 
-          <div className="grid gap-4 py-4">
-            <div className="grid gap-3">
-              <Label className="text-sm font-medium">Search Item</Label>
-              <AppSearchBar
-                placeholder="Search for items to update..."
-                onSelect={handleSearchSelect}
-              />
-            </div>
-            {selectedType && originalData && (
-              <>
-                <div className="border-t pt-4">
-                  <Label className="text-sm font-medium text-gray-900 mb-3 block">
-                    Update Item Details ({selectedType.toUpperCase()})
-                  </Label>
-                  <div className="grid gap-4">
-                    {renderFormFields()}
-                  </div>
-                </div>
-              </>
-            )}
+          <div className="grid mb-4">
+            <ScrollArea className="max-h-[60vh]">
+              <div className="grid gap-3 mb-6 px-2">
+                <Label className="text-sm font-medium">Search Item</Label>
+                <AppSearchBar
+                  placeholder="Search for items to update..."
+                  onSelect={handleSearchSelect}
+                />
+              </div>
+              {selectedType && originalData && (
+                <div className="grid gap-4 px-2 pb-2">{renderFormFields()}</div>
+              )}
+            </ScrollArea>
           </div>
 
-          <DialogFooter>
+          <DialogFooter className="px-2 pb-2">
             <DialogClose asChild>
               <Button type="button" variant="outline" className="font-bold">
                 Cancel
