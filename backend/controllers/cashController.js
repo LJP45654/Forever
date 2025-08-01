@@ -2,7 +2,22 @@ const { query } = require('../utils/db.js');
 
 async function getAllCashRecords(req, res) {
   try {
-    const cashRecords = await query(`
+    
+    if (req.body) {
+      const { filter } = req.body;
+      const cashRecords = await query(`
+      SELECT 
+        id,
+        DATE_FORMAT(timestamp, '%Y-%m-%d') AS timestamp,
+        currency,
+        delta_amount,
+        note
+      FROM cash
+      WHERE currency = ?
+    `, [filter]);
+      res.json(cashRecords);
+    } else {
+      const cashRecords = await query(`
   SELECT 
     id,
     DATE_FORMAT(timestamp, '%Y-%m-%d') AS timestamp,
@@ -11,7 +26,9 @@ async function getAllCashRecords(req, res) {
     note
   FROM cash
 `);
-    res.json(cashRecords);
+      res.json(cashRecords);
+    }
+
   } catch (error) {
     console.error('Error fetching cash records:', error);
     res.status(500).json({ error: 'Database query failed' });
@@ -181,7 +198,7 @@ async function updateCashRecords(req, res) {
       UPDATE cash
       SET delta_amount = ?, note = ?
       WHERE id = ?`
-    
+
     const result = await query(sql, [delta_amount, note, id]);
 
     if (result.affectedRows === 0) {

@@ -18,7 +18,24 @@ async function getTickerNames(req, res) {
 
 async function getTickerRecords(req, res) {
   try {
-    sql = `SELECT 
+    if (req.body) {
+      const { filter } = req.body;
+      sql = `SELECT 
+  id,
+  stock_name,
+  currency,
+  quantity,
+  ROUND(purchase_price, 2) AS purchase_price,
+  ROUND(current_price, 2) AS current_price,
+  ROUND(profit_loss, 2) AS profit_loss,
+  DATE_FORMAT(purchase_date, '%Y-%m-%d') AS purchase_date
+FROM stocks
+  WHERE stock_name=?`
+      const tickerRecords = await query(sql, [filter]);
+      res.json(tickerRecords);
+    }
+    else {
+      sql = `SELECT 
   id,
   stock_name,
   currency,
@@ -28,8 +45,10 @@ async function getTickerRecords(req, res) {
   ROUND(profit_loss, 2) AS profit_loss,
   DATE_FORMAT(purchase_date, '%Y-%m-%d') AS purchase_date
 FROM stocks;`
-    const tickerRecords = await query(sql);
-    res.json(tickerRecords);
+      const tickerRecords = await query(sql);
+      res.json(tickerRecords);
+    }
+
   } catch (error) {
     console.error('Error fetching ticker names:', error);
     res.status(500).json({ error: 'Database query failed' });
@@ -119,7 +138,7 @@ async function insertStockRecords(req, res) {
 
 async function deleteStockRecordsById(req, res) {
   try {
-    const  {id}  = req.body;
+    const { id } = req.body;
     console.log(id)
     // 简单校验
     if (!id || isNaN(id)) {
@@ -162,7 +181,7 @@ async function updateStockRecords(req, res) {
 
     const current_price = current_price_return[0].current_price
 
-    const profit_loss= (current_price - purchase_price) * quantity
+    const profit_loss = (current_price - purchase_price) * quantity
 
     const updateSql = `
       UPDATE stocks
@@ -170,7 +189,7 @@ async function updateStockRecords(req, res) {
       WHERE id = ?
       `
 
-    await query(updateSql, [stock_name, currency, quantity, purchase_price, purchase_date, current_price,profit_loss, stock_code, id]);
+    await query(updateSql, [stock_name, currency, quantity, purchase_price, purchase_date, current_price, profit_loss, stock_code, id]);
 
     res.status(200).json({ message: 'Stock record updated successfully.' });
   } catch (error) {
